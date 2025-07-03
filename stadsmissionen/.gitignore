@@ -118,7 +118,7 @@ Thumbs.db
 .vite/
 
 # Cursor AI
-.cursor/
+# .cursor/
 
 # Local development
 *.local
