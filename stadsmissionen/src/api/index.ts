@@ -1,7 +1,7 @@
 import { ApiConfiguration } from '@/api/config';
 import { MockDataService } from '@/api/mocks';
 import type { RelationalParams } from '@/types/enhanced';
-import type { ApiResponse, RequestParams } from '@/types';
+import type { RequestParams } from '@/types';
 
 // Export all types and client functionality
 export * from '@/api/client';

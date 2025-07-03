@@ -30,9 +30,9 @@ const toastsByPosition = computed(() => {
     'bottom-center': [],
   };
 
-  toasts.value.forEach(toast => {
+  toasts.value.forEach((toast: ToastType) => {
     const position = toast.position ?? config.position ?? 'top-right';
-    groups[position].push(toast);
+    (groups as any)[position].push(toast);
   });
 
   return groups;

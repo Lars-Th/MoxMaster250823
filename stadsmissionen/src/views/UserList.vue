@@ -181,19 +181,30 @@ const stats = computed(() => {
   return [
     {
       label: 'Totalt antal användare',
-      value: loginAccounts.value.filter((account: any) => account.status === 'Aktiv' || account.status === 'Inaktiv' || account.status === 'Låst').length.toString(),
+      value: loginAccounts.value
+        .filter(
+          (account: any) =>
+            account.status === 'Aktiv' || account.status === 'Inaktiv' || account.status === 'Låst'
+        )
+        .length.toString(),
     },
     {
       label: 'Aktiva användare',
-      value: loginAccounts.value.filter((account: any) => account.status === 'Aktiv').length.toString(),
+      value: loginAccounts.value
+        .filter((account: any) => account.status === 'Aktiv')
+        .length.toString(),
     },
     {
       label: 'Låsta konton',
-      value: loginAccounts.value.filter((account: any) => account.status === 'Låst').length.toString(),
+      value: loginAccounts.value
+        .filter((account: any) => account.status === 'Låst')
+        .length.toString(),
     },
     {
       label: 'Administratörer',
-      value: loginAccounts.value.filter((account: any) => account.role === 'Administrator').length.toString(),
+      value: loginAccounts.value
+        .filter((account: any) => account.role === 'Administrator')
+        .length.toString(),
     },
   ];
 });
@@ -218,10 +229,11 @@ const filteredData = computed(() => {
   // Apply search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
-    filtered = filtered.filter((account: any) =>
-      account.email.toLowerCase().includes(query) ||
-      account.fullName.toLowerCase().includes(query) ||
-      account.username.toLowerCase().includes(query)
+    filtered = filtered.filter(
+      (account: any) =>
+        account.email.toLowerCase().includes(query) ||
+        account.fullName.toLowerCase().includes(query) ||
+        account.username.toLowerCase().includes(query)
     );
   }
 

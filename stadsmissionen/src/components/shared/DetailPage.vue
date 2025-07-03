@@ -15,22 +15,20 @@ import {
   ComboboxList,
   ComboboxTrigger,
 } from '@/components/ui/combobox';
-import {
-  ArrowLeft,
-  Check,
-  ChevronsUpDown,
-  FileText,
-  Info,
-  Save,
-  Trash2,
-  Undo2,
-} from 'lucide-vue-next';
+import { ArrowLeft, Check, ChevronsUpDown, FileText, Info, Save, Undo2 } from 'lucide-vue-next';
 
 interface Field {
   key: string;
   label: string;
   type: 'text' | 'textarea' | 'select' | 'date' | 'number';
   options?: { value: string; label: string }[];
+}
+
+interface Stat {
+  label: string;
+  value: string | number;
+  variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+  color?: string;
 }
 
 interface Props {
@@ -42,7 +40,7 @@ interface Props {
   title?: string;
   breadcrumbs?: Array<{ label: string; to: string; isCurrentPage?: boolean }>;
   showStats?: boolean;
-  stats?: Array<{ label: string; value: string | number; color?: string; variant?: string }>;
+  stats?: Stat[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -102,11 +100,35 @@ const getSelectedOption = (field: Field, value: any) => {
 // Helper function to handle combobox selection
 const handleComboboxChange = (
   field: Field,
-  selectedOption: { value: string; label: string } | null
+  selectedOption: { value: string; label: string } | string | number | bigint | null
 ) => {
-  const value = selectedOption ? selectedOption.value : '';
+  let value = '';
+  if (selectedOption && typeof selectedOption === 'object' && 'value' in selectedOption) {
+    value = selectedOption.value;
+  } else if (
+    typeof selectedOption === 'string' ||
+    typeof selectedOption === 'number' ||
+    typeof selectedOption === 'bigint'
+  ) {
+    value = selectedOption.toString();
+  }
   updateField(field.key, value);
 };
+
+// Normalize combobox value for template use
+function normalizeComboboxValue(val: unknown): { value: string; label: string } | null {
+  if (
+    val &&
+    typeof val === 'object' &&
+    'value' in val &&
+    'label' in val &&
+    typeof (val as any).value === 'string' &&
+    typeof (val as any).label === 'string'
+  ) {
+    return val as { value: string; label: string };
+  }
+  return null;
+}
 </script>
 
 <template>
@@ -212,10 +234,10 @@ const handleComboboxChange = (
                 />
                 <Combobox
                   v-else-if="field.type === 'select'"
-                  :model-value="getSelectedOption(field, data[field.key])"
+                  :model-value="normalizeComboboxValue(getSelectedOption(field, data[field.key]))"
                   :disabled="readonly"
                   by="value"
-                  @update:model-value="handleComboboxChange(field, $event)"
+                  @update:model-value="val => handleComboboxChange(field, val)"
                 >
                   <ComboboxAnchor as-child>
                     <ComboboxTrigger as-child>

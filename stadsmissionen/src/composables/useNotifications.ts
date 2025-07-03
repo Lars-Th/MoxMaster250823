@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import type { Toast, ToastOptions, UseNotificationsReturn } from '@/types';
 
 // Global state for notifications
@@ -8,10 +8,6 @@ let notificationId = 0;
 const generateId = (): string => {
   return `notification-${++notificationId}-${Date.now()}`;
 };
-
-const unreadCount = computed(() => {
-  return notifications.value.filter(n => !n.read).length;
-});
 
 const addNotification = (options: ToastOptions): string => {
   const newNotification: Toast = {
@@ -45,6 +41,10 @@ const removeNotification = (id: string): void => {
   }
 };
 
+const clearNotifications = (): void => {
+  notifications.value = [];
+};
+
 const markAsRead = (id: string): void => {
   const notification = notifications.value.find(n => n.id === id);
   if (notification) {
@@ -52,18 +52,18 @@ const markAsRead = (id: string): void => {
   }
 };
 
-const clearAll = (): void => {
-  notifications.value = [];
+const markAllAsRead = (): void => {
+  notifications.value.forEach(n => (n.read = true));
 };
 
 export const useNotifications = (): UseNotificationsReturn => {
   return {
     notifications,
-    unreadCount,
     addNotification,
     removeNotification,
+    clearNotifications,
     markAsRead,
-    clearAll,
+    markAllAsRead,
   };
 };
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import { useAuth } from './composables/useAuth';
 import { mapPermissionGroupToDetailed } from './composables/useAuth';

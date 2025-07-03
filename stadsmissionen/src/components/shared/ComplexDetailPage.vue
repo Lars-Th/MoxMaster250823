@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ArrowLeft, Edit, FileText, Info, Plus, Save, Trash2, Undo2 } from 'lucide-vue-next';
+import type { Component } from 'vue';
 
 interface Field {
   key: string;
@@ -26,7 +27,7 @@ interface SubTable {
   title: string;
   icon?: Component;
   data: Record<string, unknown>[];
-  columns: Record<string, unknown>[];
+  columns: import('@/types/ui').TableColumn<Record<string, unknown>>[];
   allowAdd?: boolean;
   allowEdit?: boolean;
   allowDelete?: boolean;
@@ -194,14 +195,14 @@ const formatValue = (value: unknown, type?: string) => {
                 <Label class="text-[10px] font-medium text-gray-500">{{ field.label }}</Label>
                 <Input
                   v-if="field.type === 'text'"
-                  :model-value="data[field.key]"
+                  :model-value="data[field.key] as string | number | undefined"
                   :readonly="readonly"
                   class="h-8 text-xs"
                   @update:model-value="updateField(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'number'"
-                  :model-value="data[field.key]"
+                  :model-value="data[field.key] as string | number | undefined"
                   :readonly="readonly"
                   type="number"
                   class="h-8 text-xs"
@@ -209,7 +210,7 @@ const formatValue = (value: unknown, type?: string) => {
                 />
                 <Input
                   v-else-if="field.type === 'date'"
-                  :model-value="data[field.key]"
+                  :model-value="data[field.key] as string | number | undefined"
                   :readonly="readonly"
                   type="date"
                   class="h-8 text-xs"
@@ -217,7 +218,7 @@ const formatValue = (value: unknown, type?: string) => {
                 />
                 <Textarea
                   v-else-if="field.type === 'textarea'"
-                  :model-value="data[field.key]"
+                  :model-value="data[field.key] as string | number | undefined"
                   :readonly="readonly"
                   rows="3"
                   class="text-xs resize-none"
@@ -225,7 +226,7 @@ const formatValue = (value: unknown, type?: string) => {
                 />
                 <Select
                   v-else-if="field.type === 'select'"
-                  :model-value="data[field.key]"
+                  :model-value="data[field.key] as any"
                   :disabled="readonly"
                   @update:model-value="updateField(field.key, $event)"
                 >

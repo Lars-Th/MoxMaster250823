@@ -39,3 +39,16 @@ export * from './enums';
 export * from './composables';
 
 // API types are now defined in ./api and ./api-parameters and exported above
+export type {
+  ApiConfig,
+  ApiError,
+  ApiRequestOptions,
+  ApiResponse,
+  HttpMethod,
+  QueryParams,
+  CrudService,
+  FilterParams,
+  PaginatedResponse,
+  PaginationParams,
+  RequestParams,
+} from './api';

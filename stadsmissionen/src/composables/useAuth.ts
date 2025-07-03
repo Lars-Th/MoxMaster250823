@@ -26,7 +26,7 @@ export function useAuth() {
       }
 
       // Set current user from API response
-      let user = response.data.user;
+      let { user } = response.data;
       if (user && 'permissionGroup' in user && user.permissionGroup) {
         user = { ...user, permissionGroup: mapPermissionGroupToDetailed(user.permissionGroup) };
       }
@@ -77,7 +77,10 @@ export function useAuth() {
       try {
         let parsedUser = JSON.parse(storedUser);
         if (parsedUser && 'permissionGroup' in parsedUser && parsedUser.permissionGroup) {
-          parsedUser = { ...parsedUser, permissionGroup: mapPermissionGroupToDetailed(parsedUser.permissionGroup) };
+          parsedUser = {
+            ...parsedUser,
+            permissionGroup: mapPermissionGroupToDetailed(parsedUser.permissionGroup),
+          };
         }
         currentUser.value = parsedUser as AuthUser;
 
@@ -89,7 +92,10 @@ export function useAuth() {
               // Token is valid, use fresh user data from API
               let freshUser = response.data;
               if (freshUser && 'permissionGroup' in freshUser && freshUser.permissionGroup) {
-                freshUser = { ...freshUser, permissionGroup: mapPermissionGroupToDetailed(freshUser.permissionGroup) };
+                freshUser = {
+                  ...freshUser,
+                  permissionGroup: mapPermissionGroupToDetailed(freshUser.permissionGroup),
+                };
               }
               currentUser.value = freshUser as AuthUser;
               localStorage.setItem('currentUser', JSON.stringify(freshUser));

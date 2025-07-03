@@ -1,9 +1,9 @@
 // Composable return type interfaces
-export interface UseApiOptions<T = unknown> {
+export interface UseApiOptions {
   immediate?: boolean;
   cache?: boolean;
   cacheKey?: string;
-  onSuccess?: (data: T) => void;
+  onSuccess?: (data: any) => void;
   onError?: (error: any) => void;
 }
 

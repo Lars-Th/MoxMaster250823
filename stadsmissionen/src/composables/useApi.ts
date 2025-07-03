@@ -21,20 +21,20 @@ function convertErrorToDetails(error: unknown): Record<string, unknown> | null {
   return { message: String(error) };
 }
 
-export function useApi<T>(
-  apiCall: () => Promise<ApiResponse<T>>,
-  options: UseApiOptions<T> = {}
-): UseApiReturn<T> {
+export function useApi(
+  apiCall: () => Promise<ApiResponse>,
+  options: UseApiOptions = {}
+): UseApiReturn {
   const { immediate = false, cache: useCache = false, cacheKey, onSuccess, onError } = options;
 
-  const data = shallowRef<T | null>(null);
+  const data = shallowRef(null);
   const loading = ref(false);
   const error = ref<ApiError | null>(null);
 
   const isSuccess = computed(() => data.value !== null && error.value === null);
   const isError = computed(() => error.value !== null);
 
-  const getCachedData = (key: string): T | null => {
+  const getCachedData = (key: string): unknown | null => {
     if (!useCache || !key) return null;
 
     const cached = cache.get(key);
@@ -46,10 +46,10 @@ export function useApi<T>(
       return null;
     }
 
-    return cached.data as T;
+    return cached.data;
   };
 
-  const setCachedData = (key: string, value: T): void => {
+  const setCachedData = (key: string, value: unknown): void => {
     if (!useCache || !key) return;
 
     cache.set(key, {
@@ -138,7 +138,7 @@ export function useApi<T>(
 // Specialized composables for common patterns
 export function useApiList<T>(
   apiCall: () => Promise<ApiResponse<T[]>>,
-  options: UseApiOptions<T[]> = {}
+  options: UseApiOptions = {}
 ) {
   const api = useApi(apiCall, { immediate: true, cache: true, ...options });
 
@@ -154,7 +154,7 @@ export function useApiList<T>(
 
 export function useApiItem<T>(
   apiCall: () => Promise<ApiResponse<T | null>>,
-  options: UseApiOptions<T | null> = {}
+  options: UseApiOptions = {}
 ) {
   return useApi(apiCall, { immediate: true, cache: true, ...options });
 }
@@ -162,7 +162,7 @@ export function useApiItem<T>(
 // Mutation composable for create/update/delete operations
 export function useApiMutation<TData, TVariables = unknown>(
   apiCall: (variables: TVariables) => Promise<ApiResponse<TData>>,
-  options: UseApiOptions<TData> = {}
+  options: UseApiOptions = {}
 ) {
   const loading = ref(false);
   const error = ref<ApiError | null>(null);

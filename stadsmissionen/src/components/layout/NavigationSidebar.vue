@@ -115,10 +115,9 @@ onMounted(() => {
 });
 
 // Check if any child route of a dropdown menu is active
-const hasActiveChild = (item: Record<string, unknown>) => {
-  if (!item['dropdown']) return false;
-
-  const dropdown = item['dropdown'] as Array<{ children: Array<{ path: string }> }>;
+const hasActiveChild = (item: any) => {
+  if (!item.dropdown) return false;
+  const dropdown = item.dropdown as Array<{ children: Array<{ path: string }> }>;
   return dropdown.some(section => section.children.some(child => isActiveRoute(child.path)));
 };
 

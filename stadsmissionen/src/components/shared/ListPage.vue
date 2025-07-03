@@ -10,7 +10,7 @@ interface ActionButton {
   label: string;
   icon?: any;
   onClick: () => void;
-  variant?: 'default' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary';
   class?: string;
 }
 

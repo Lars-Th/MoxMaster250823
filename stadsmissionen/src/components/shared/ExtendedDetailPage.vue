@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Save, Trash2, Undo2 } from 'lucide-vue-next';
+import { ArrowLeft, Save, Undo2 } from 'lucide-vue-next';
 
 interface Field {
   key: string;

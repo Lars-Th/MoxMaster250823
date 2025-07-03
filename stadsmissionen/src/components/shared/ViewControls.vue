@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Component, computed } from 'vue';
+import { computed } from 'vue';
 import Button from '@/components/common/Button.vue';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,11 +12,10 @@ import {
 
 interface ActionButton {
   label: string;
-  icon?: Component;
+  icon?: any;
   onClick: () => void;
-  class?: string;
   variant?: 'primary' | 'secondary';
-  size?: 'default' | 'sm' | 'lg';
+  class?: string;
 }
 
 interface FilterOption {
@@ -125,7 +124,6 @@ const handleFilterChange = (filter: Filter) => {
           v-for="button in leftActionButtons"
           :key="button.label"
           :variant="button.variant ?? 'primary'"
-          :size="button.size ?? 'sm'"
           :class="['gap-2 text-xs font-semibold', button.class]"
           @click="button.onClick"
         >
@@ -140,7 +138,6 @@ const handleFilterChange = (filter: Filter) => {
           v-for="button in additionalActions"
           :key="button.label"
           :variant="button.variant ?? 'secondary'"
-          :size="button.size ?? 'sm'"
           :class="['gap-2 text-xs font-semibold', button.class]"
           @click="button.onClick"
         >
