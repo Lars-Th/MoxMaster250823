@@ -4,7 +4,7 @@
     "allowJs": true,
     "checkJs": false,
     "lib": ["DOM", "ES2015", "ES2020", "ES2021", "ES2022"],
-    "types": ["vite/client", "node0", "estree"],
+    "types": ["vite/client", "node", "estree"],
     "moduleResolution": "bundler",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

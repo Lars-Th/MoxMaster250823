@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { AlertTriangle, CheckCircle, HelpCircle, Info, X, XCircle } from 'lucide-vue-next';
 import type { Toast as ToastType } from '@/types/index';
 
 interface Props {
@@ -55,15 +56,62 @@ const getIconClasses = (toast: ToastType): string => {
   return iconClasses[toast.type ?? 'info'];
 };
 
+// Get the appropriate Lucide icon component for toast type
+const getToastIcon = (toast: ToastType) => {
+  const iconMap = {
+    success: CheckCircle,
+    error: XCircle,
+    warning: AlertTriangle,
+    info: Info,
+    confirm: HelpCircle,
+  };
+  return iconMap[toast.type ?? 'info'];
+};
+
 // Action button classes
-const getActionClasses = (style?: string): string => {
+const getActionClasses = (style?: string, toastType?: string): string => {
+  const baseClasses =
+    'text-xs font-medium px-3 py-1.5 rounded border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
+
   const styleClasses: { [key: string]: string } = {
-    primary: 'bg-current text-white border-current hover:opacity-90',
-    secondary: 'border-current hover:bg-current hover:text-white',
-    destructive: 'bg-red-600 text-white border-red-600 hover:bg-red-700',
+    primary: (() => {
+      // Different primary colors based on toast type
+      switch (toastType) {
+        case 'success':
+          return 'bg-green-600 text-white border-green-600 hover:bg-green-700 focus:ring-green-500';
+        case 'error':
+          return 'bg-red-600 text-white border-red-600 hover:bg-red-700 focus:ring-red-500';
+        case 'warning':
+          return 'bg-yellow-600 text-white border-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500';
+        case 'info':
+          return 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700 focus:ring-blue-500';
+        case 'confirm':
+          return 'bg-purple-600 text-white border-purple-600 hover:bg-purple-700 focus:ring-purple-500';
+        default:
+          return 'bg-gray-600 text-white border-gray-600 hover:bg-gray-700 focus:ring-gray-500';
+      }
+    })(),
+    secondary: (() => {
+      // Different secondary colors based on toast type
+      switch (toastType) {
+        case 'success':
+          return 'border-green-300 text-green-700 hover:bg-green-50 focus:ring-green-500';
+        case 'error':
+          return 'border-red-300 text-red-700 hover:bg-red-50 focus:ring-red-500';
+        case 'warning':
+          return 'border-yellow-300 text-yellow-700 hover:bg-yellow-50 focus:ring-yellow-500';
+        case 'info':
+          return 'border-blue-300 text-blue-700 hover:bg-blue-50 focus:ring-blue-500';
+        case 'confirm':
+          return 'border-purple-300 text-purple-700 hover:bg-purple-50 focus:ring-purple-500';
+        default:
+          return 'border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500';
+      }
+    })(),
+    destructive: 'bg-red-600 text-white border-red-600 hover:bg-red-700 focus:ring-red-500',
   };
 
-  return `text-xs font-medium px-3 py-1.5 rounded border transition-all ${styleClasses[style ?? 'secondary']}`;
+  return `${baseClasses} ${styleClasses[style ?? 'secondary']}`;
 };
 
 // Handle actions
@@ -146,11 +194,10 @@ onUnmounted(() => {
     <div class="flex items-start gap-3">
       <!-- Icon -->
       <div
-        v-if="toast.icon"
-        class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full text-sm font-bold"
+        class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full"
         :class="getIconClasses(toast)"
       >
-        {{ toast.icon }}
+        <Component :is="getToastIcon(toast)" :size="16" />
       </div>
 
       <!-- Content -->
@@ -167,7 +214,7 @@ onUnmounted(() => {
           <button
             v-for="action in toast.actions"
             :key="action.label"
-            :class="getActionClasses(action.style)"
+            :class="getActionClasses(action.style, toast.type)"
             @click.stop="handleAction(action.action)"
           >
             {{ action.label }}
@@ -178,11 +225,11 @@ onUnmounted(() => {
       <!-- Close button -->
       <button
         v-if="toast.closable"
-        class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full opacity-60 hover:opacity-100 transition-opacity"
+        class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full opacity-60 hover:opacity-100 transition-all duration-200 hover:bg-black hover:bg-opacity-10"
         :aria-label="`Stäng ${toast.type} meddelande`"
         @click.stop="handleClose"
       >
-        <span class="text-sm">✕</span>
+        <X :size="14" />
       </button>
     </div>
   </div>

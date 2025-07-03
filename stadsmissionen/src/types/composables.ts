@@ -7,7 +7,7 @@ export interface UseApiOptions<T = unknown> {
   onError?: (error: any) => void;
 }
 
-export interface UseApiReturn<T> {
+export interface UseApiReturn {
   data: any;
   loading: any;
   error: any;
@@ -19,11 +19,29 @@ export interface UseApiReturn<T> {
 }
 
 export interface UseToastReturn {
+  toasts: any;
+  addToast: (options: any) => string;
+  removeToast: (id: string) => void;
+  clearToasts: () => void;
+  updateToast: (id: string, options: any) => void;
   toast: (message: string, options?: any) => void;
-  success: (message: string, options?: any) => void;
-  error: (message: string, options?: any) => void;
-  warning: (message: string, options?: any) => void;
-  info: (message: string, options?: any) => void;
+  success: (title: string, description?: string, options?: any) => string;
+  error: (title: string, description?: string, options?: any) => string;
+  warning: (title: string, description?: string, options?: any) => string;
+  info: (title: string, description?: string, options?: any) => string;
+  confirm: (
+    title: string,
+    description?: string,
+    onConfirm?: () => void,
+    onCancel?: () => void
+  ) => string;
+  promise: <T>(
+    promise: Promise<T>,
+    options: { loading: string; success: string; error: string }
+  ) => Promise<T>;
+  unsavedChanges: (onSave: () => void, onDiscard: () => void) => string;
+  config: any;
+  setConfig: (newConfig: any) => void;
   dismiss: (id?: string) => void;
   dismissAll: () => void;
 }

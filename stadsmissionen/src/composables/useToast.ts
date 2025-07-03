@@ -16,11 +16,11 @@ const defaultConfig: ToastConfig = {
   newestOnTop: true,
   preventDuplicates: false,
   icons: {
-    success: '✅',
-    error: '❌',
-    warning: '⚠️',
-    info: 'ℹ️',
-    confirm: '❓',
+    success: 'CheckCircle',
+    error: 'XCircle',
+    warning: 'AlertTriangle',
+    info: 'Info',
+    confirm: 'HelpCircle',
   },
 };
 
@@ -235,12 +235,32 @@ export function useToast(): UseToastReturn {
     Object.assign(config, newConfig);
   };
 
+  // Generic toast method
+  const toast = (message: string, options: Omit<ToastOptions, 'title'> = {}): void => {
+    addToast({
+      ...options,
+      title: message,
+    });
+  };
+
+  // Alias methods for better API consistency
+  const dismiss = (id?: string): void => {
+    if (id) {
+      removeToast(id);
+    }
+  };
+
+  const dismissAll = (): void => {
+    clearToasts();
+  };
+
   return {
     toasts,
     addToast,
     removeToast,
     clearToasts,
     updateToast,
+    toast,
     success,
     error,
     warning,
@@ -250,5 +270,7 @@ export function useToast(): UseToastReturn {
     unsavedChanges,
     config,
     setConfig,
+    dismiss,
+    dismissAll,
   };
 }

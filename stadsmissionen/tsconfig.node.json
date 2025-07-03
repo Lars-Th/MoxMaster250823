@@ -19,7 +19,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "types": ["vite/client", "node0", "estree"]
+    "types": ["vite/client", "node", "estree"]
   },
   "include": ["vite.config.ts"]
 }
