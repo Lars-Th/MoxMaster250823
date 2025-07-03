@@ -48,8 +48,8 @@ const {
     return api.users.getById(userId.value, { include: ['permissionGroup'] });
   },
   {
-    cacheKey: computed(() => (userId.value ? `user-${userId.value}-with-permissions` : 'no-user')),
-    immediate: computed(() => !!userId.value),
+    cacheKey: userId.value ? `user-${userId.value}-with-permissions` : 'no-user',
+    immediate: !!userId.value,
   }
 );
 

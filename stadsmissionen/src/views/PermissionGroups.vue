@@ -119,7 +119,7 @@ function viewGroupDetails(group: Record<string, unknown>) {
     <div v-else-if="hasError" class="flex items-center justify-center py-12">
       <div class="text-center">
         <p class="text-destructive mb-2">Ett fel uppstod vid laddning av behörighetsgrupper</p>
-        <Button variant="outline" @click="() => window.location.reload()">Försök igen</Button>
+        <Button variant="outline" @click="() => globalThis.window.location.reload()">Försök igen</Button>
       </div>
     </div>
 

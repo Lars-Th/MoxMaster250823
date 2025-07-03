@@ -27,7 +27,7 @@ export function useApi(
 ): UseApiReturn {
   const { immediate = false, cache: useCache = false, cacheKey, onSuccess, onError } = options;
 
-  const data = shallowRef(null);
+  const data = shallowRef<any>(null);
   const loading = ref(false);
   const error = ref<ApiError | null>(null);
 
@@ -63,7 +63,7 @@ export function useApi(
     if (useCache && cacheKey) {
       const cachedData = getCachedData(cacheKey);
       if (cachedData) {
-        data.value = cachedData;
+        data.value = cachedData ?? null;
         error.value = null;
         return;
       }
@@ -75,7 +75,7 @@ export function useApi(
     try {
       const response = await apiCall();
 
-      if (response.success && response.data !== null) {
+      if (response.success && response.data !== null && response.data !== undefined) {
         data.value = response.data;
 
         // Cache the data
@@ -85,6 +85,7 @@ export function useApi(
 
         onSuccess?.(response.data);
       } else {
+        data.value = null;
         error.value = response.error ?? {
           message: 'Unknown error occurred',
           code: 'UNKNOWN_ERROR',

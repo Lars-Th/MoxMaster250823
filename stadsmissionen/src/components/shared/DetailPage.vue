@@ -115,17 +115,13 @@ const handleComboboxChange = (
   updateField(field.key, value);
 };
 
-// Normalize combobox value for template use
-function normalizeComboboxValue(val: unknown): { value: string; label: string } | null {
-  if (
-    val &&
-    typeof val === 'object' &&
-    'value' in val &&
-    'label' in val &&
-    typeof (val as any).value === 'string' &&
-    typeof (val as any).label === 'string'
-  ) {
+// Normalize combobox value to ensure only valid types are passed to the handler
+function normalizeComboboxValue(val: unknown): string | number | bigint | { value: string; label: string } | null {
+  if (val && typeof val === 'object' && 'value' in val && 'label' in val) {
     return val as { value: string; label: string };
+  }
+  if (typeof val === 'string' || typeof val === 'number' || typeof val === 'bigint') {
+    return val;
   }
   return null;
 }
@@ -234,10 +230,10 @@ function normalizeComboboxValue(val: unknown): { value: string; label: string } 
                 />
                 <Combobox
                   v-else-if="field.type === 'select'"
-                  :model-value="normalizeComboboxValue(getSelectedOption(field, data[field.key]))"
+                  :model-value="getSelectedOption(field, data[field.key])"
                   :disabled="readonly"
                   by="value"
-                  @update:model-value="val => handleComboboxChange(field, val)"
+                  @update:model-value="handleComboboxChange(field, normalizeComboboxValue($event))"
                 >
                   <ComboboxAnchor as-child>
                     <ComboboxTrigger as-child>
