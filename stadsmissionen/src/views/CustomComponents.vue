@@ -685,6 +685,7 @@ const fileTree: TreeNode[] = [
               ],
             },
             { key: 'budget', label: 'Budget (SEK)', type: 'number' },
+            { key: 'teamSize', label: 'Teamstörlek', type: 'number' },
           ],
           sidebarFields: [
             {
@@ -1336,14 +1337,6 @@ const lineHeightExamples = [
   { class: 'leading-7', description: 'line-height: 1.75rem' },
 ];
 
-const letterSpacingExamples = [
-  { class: 'tracking-tighter', description: 'letter-spacing: -0.05em' },
-  { class: 'tracking-tight', description: 'letter-spacing: -0.025em' },
-  { class: 'tracking-normal', description: 'letter-spacing: 0em' },
-  { class: 'tracking-wide', description: 'letter-spacing: 0.025em' },
-  { class: 'tracking-wider', description: 'letter-spacing: 0.05em' },
-];
-
 // Color examples
 const colorExamples = [
   {
@@ -1390,33 +1383,34 @@ const computeSpacingValues = () => {
 
 // Update CSS custom properties for all spacing variables
 const updateAllSpacingVariables = () => {
-  if (!componentPreview.value) return;
-  spacingVariables.value.forEach(spacing => {
-    const remValue = `${spacing.computedValue}rem`;
-
-    // Apply to the base spacing variable
-    componentPreview.value!.style.setProperty(spacing.variable, remValue);
-
-    // Get the spacing number for this variable
-    const spaceNum = spacingMap[spacing.variable];
-    if (spaceNum) {
-      if (spacingTarget.value === 'margin' || spacingTarget.value === 'all') {
-        componentPreview.value!.style.setProperty(`--margin-${spaceNum}`, remValue);
+  if (componentPreview.value) {
+    spacingVariables.value.forEach(spacing => {
+      const remValue = `${spacing.computedValue}rem`;
+      // Apply to the base spacing variable
+      componentPreview.value?.style.setProperty(spacing.variable, remValue);
+      // Get the spacing number for this variable
+      const spaceNum = spacingMap[spacing.variable];
+      if (spaceNum) {
+        // Apply to the actual CSS variables used in main.css based on selection
+        if (spacingTarget.value === 'margin' || spacingTarget.value === 'all') {
+          componentPreview.value?.style.setProperty(`--margin-${spaceNum}`, remValue);
+        }
+        if (spacingTarget.value === 'padding' || spacingTarget.value === 'all') {
+          componentPreview.value?.style.setProperty(`--padding-${spaceNum}`, remValue);
+        }
+        if (spacingTarget.value === 'gap' || spacingTarget.value === 'all') {
+          componentPreview.value?.style.setProperty(`--gap-${spaceNum}`, remValue);
+        }
       }
-      if (spacingTarget.value === 'padding' || spacingTarget.value === 'all') {
-        componentPreview.value!.style.setProperty(`--padding-${spaceNum}`, remValue);
-      }
-      if (spacingTarget.value === 'gap' || spacingTarget.value === 'all') {
-        componentPreview.value!.style.setProperty(`--gap-${spaceNum}`, remValue);
-      }
-    }
-  });
+    });
+  }
 };
 
 // Update individual spacing variable (for manual overrides)
 const updateIndividualSpacing = (index: number, value: number) => {
-  if (!spacingVariables.value[index]) return;
-  spacingVariables.value[index].computedValue = value;
+  if (spacingVariables.value[index]) {
+    spacingVariables.value[index].computedValue = value;
+  }
   updateAllSpacingVariables();
 };
 
@@ -1454,53 +1448,77 @@ const computeTextSizeValues = () => {
 
 // Update CSS custom properties for all text size variables
 const updateAllTextSizeVariables = () => {
-  if (!componentPreview.value) return;
-  textSizeVariables.value.forEach(textSize => {
-    const remValue = `${textSize.computedValue}rem`;
-
-    // Apply to the base text size variable
-    componentPreview.value.style.setProperty(textSize.variable, remValue);
-
-    // Apply to actual CSS variables based on selection
-    const sizeClass = textSize.variable.replace('--text-', '');
-    if (textSizeTarget.value === 'text' || textSizeTarget.value === 'all') {
-      componentPreview.value!.style.setProperty(`--font-size-${sizeClass}`, remValue);
-    }
-    if (textSizeTarget.value === 'leading' || textSizeTarget.value === 'all') {
-      const lineHeightValue = `${textSize.computedValue * 1.4}rem`;
-      componentPreview.value!.style.setProperty(`--line-height-${sizeClass}`, lineHeightValue);
-    }
-    if (textSizeTarget.value === 'tracking' || textSizeTarget.value === 'all') {
-      const letterSpacingValue = `${textSize.computedValue * 0.02}em`;
-      componentPreview.value!.style.setProperty(`--letter-spacing-${sizeClass}`, letterSpacingValue);
-    }
-  });
+  if (componentPreview.value) {
+    textSizeVariables.value.forEach(textSize => {
+      const remValue = `${textSize.computedValue}rem`;
+      // Apply to the base text size variable
+      componentPreview.value?.style.setProperty(textSize.variable, remValue);
+      // Apply to actual CSS variables based on selection
+      const sizeClass = textSize.variable.replace('--text-', '');
+      if (textSizeTarget.value === 'text' || textSizeTarget.value === 'all') {
+        componentPreview.value?.style.setProperty(`--font-size-${sizeClass}`, remValue);
+      }
+      if (textSizeTarget.value === 'leading' || textSizeTarget.value === 'all') {
+        // Line height typically 1.2-1.5x the font size
+        const lineHeightValue = `${textSize.computedValue * 1.4}rem`;
+        componentPreview.value?.style.setProperty(`--line-height-${sizeClass}`, lineHeightValue);
+      }
+    });
+  }
 };
 
 // Update individual text size variable
 const updateIndividualTextSize = (index: number, value: number) => {
-  if (!textSizeVariables.value[index]) return;
-  textSizeVariables.value[index].computedValue = value;
-  textSizeVariables.value[index].pixelValue = Math.round(value * 16);
+  if (textSizeVariables.value[index]) {
+    textSizeVariables.value[index].computedValue = value;
+    textSizeVariables.value[index].pixelValue = Math.round(value * 16);
+  }
+  updateAllTextSizeVariables();
+};
+
+// Handle text size multiplier change
+const onTextSizeMultiplierChange = () => {
+  computeTextSizeValues();
+  updateAllTextSizeVariables();
+};
+
+// Reset text size multiplier to default
+const resetTextSizeMultiplier = () => {
+  textSizeMultiplier.value = 1;
+  onTextSizeMultiplierChange();
+};
+
+// Reset all individual text size values to computed values
+const resetTextSizesToComputedValues = () => {
+  computeTextSizeValues();
+  updateAllTextSizeVariables();
+};
+
+// Update all text size variables when target changes
+const onTextSizeTargetChange = () => {
   updateAllTextSizeVariables();
 };
 
 // Color Functions
 // Update CSS custom properties for all color variables
 const updateAllColorVariables = () => {
-  if (!componentPreview.value) return;
-  colorVariables.value.forEach(color => {
-    componentPreview.value!.style.setProperty(color.variable, color.computedValue);
-    if (colorTarget.value === 'all' || colorTarget.value === color.category) {
-      componentPreview.value!.style.setProperty(color.variable, color.computedValue);
-    }
-  });
+  if (componentPreview.value) {
+    colorVariables.value.forEach(color => {
+      // Apply to the base color variable
+      componentPreview.value?.style.setProperty(color.variable, color.computedValue);
+      // Apply based on target selection
+      if (colorTarget.value === 'all' || colorTarget.value === color.category) {
+        componentPreview.value?.style.setProperty(color.variable, color.computedValue);
+      }
+    });
+  }
 };
 
 // Update individual color variable
 const updateIndividualColor = (index: number, value: string) => {
-  if (!colorVariables.value[index]) return;
-  colorVariables.value[index].computedValue = value;
+  if (colorVariables.value[index]) {
+    colorVariables.value[index].computedValue = value;
+  }
   updateAllColorVariables();
 };
 
@@ -1527,11 +1545,21 @@ const colorToHex = (color: string): string => {
   return color.startsWith('#') ? color : '#3b82f6';
 };
 
-// Helper function to convert hex to HSL (basic implementation)
-const hexToHsl = (hex: string): string => {
-  // Basic implementation - in a real app you'd want proper hex to HSL conversion
-  return `hsl(221.2 83.2% 53.3%)`;
-};
+// Helper function to convert hex to HSL (dummy implementation)
+function hexToHsl(hex: string): string {
+  // TODO: Implement real conversion if needed
+  return hex;
+}
+
+// Letter spacing examples for usage and preview
+const letterSpacingExamples = [
+  { class: 'tracking-tighter', description: 'letter-spacing: -0.05em' },
+  { class: 'tracking-tight', description: 'letter-spacing: -0.025em' },
+  { class: 'tracking-normal', description: 'letter-spacing: 0em' },
+  { class: 'tracking-wide', description: 'letter-spacing: 0.025em' },
+  { class: 'tracking-wider', description: 'letter-spacing: 0.05em' },
+  { class: 'tracking-widest', description: 'letter-spacing: 0.1em' },
+];
 
 // Initialize spacing, text size, and color variables when component mounts
 onMounted(() => {
@@ -1905,7 +1933,7 @@ onMounted(() => {
                         title="Visa användare"
                         class="h-6 w-6 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                         @click="
-                          event => {
+                          (event: MouseEvent) => {
                             event.stopPropagation();
                             console.log('View user:', row);
                           }
@@ -1919,7 +1947,7 @@ onMounted(() => {
                         title="Redigera"
                         class="h-6 w-6 p-0 text-gray-600 hover:text-gray-700 hover:bg-gray-50"
                         @click="
-                          event => {
+                          (event: MouseEvent) => {
                             event.stopPropagation();
                             console.log('Edit user:', row);
                           }
@@ -1933,7 +1961,7 @@ onMounted(() => {
                         title="Radera"
                         class="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                         @click="
-                          event => {
+                          (event: MouseEvent) => {
                             event.stopPropagation();
                             console.log('Delete user:', row);
                           }
@@ -2268,7 +2296,7 @@ onMounted(() => {
                           step="0.125"
                           min="0"
                           max="10"
-                          class="w-20 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                          class="w-20 px-3 py-2 border border-purple-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                           @input="
                             updateIndividualTextSize(index, parseFloat($event.target.value) || 0)
                           "
@@ -2337,7 +2365,7 @@ onMounted(() => {
                       </h5>
                       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div
-                          v-for="color in colorVariables.filter(
+                          v-for="(color, index) in colorVariables.filter(
                             c => c.category === category
                           )"
                           :key="color.name"

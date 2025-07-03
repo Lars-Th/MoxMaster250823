@@ -116,7 +116,9 @@ const handleComboboxChange = (
 };
 
 // Normalize combobox value to ensure only valid types are passed to the handler
-function normalizeComboboxValue(val: unknown): string | number | bigint | { value: string; label: string } | null {
+function normalizeComboboxValue(
+  val: unknown
+): string | number | bigint | { value: string; label: string } | null {
   if (val && typeof val === 'object' && 'value' in val && 'label' in val) {
     return val as { value: string; label: string };
   }
