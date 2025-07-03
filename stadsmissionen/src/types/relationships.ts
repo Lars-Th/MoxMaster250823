@@ -1,17 +1,18 @@
 // Import base types
-import type { LoginAccount, PermissionGroup, User } from './index';
+import type { LoginAccount, User } from './index';
+import type { DetailedPermissionGroup } from './enhanced';
 
 // User relationships
 export interface UserWithRelations extends User {
   // Resolved relationships
-  permissionGroup?: PermissionGroup;
+  permissionGroup?: DetailedPermissionGroup;
 
   // Computed fields
   permissions?: string[]; // From permission group
 }
 
 // PermissionGroup relationships
-export interface PermissionGroupWithRelations extends PermissionGroup {
+export interface PermissionGroupWithRelations extends DetailedPermissionGroup {
   // Resolved relationships
   users?: UserWithRelations[];
 
@@ -23,7 +24,7 @@ export interface PermissionGroupWithRelations extends PermissionGroup {
 // LoginAccount relationships
 export interface LoginAccountWithRelations extends LoginAccount {
   // Resolved relationships
-  permissionGroup?: PermissionGroup;
+  permissionGroup?: DetailedPermissionGroup;
 
   // Computed fields
   isActive?: boolean; // status === 'Aktiv'

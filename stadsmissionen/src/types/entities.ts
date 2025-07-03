@@ -11,9 +11,7 @@ export interface LoginAccount {
   lastLogin: string;
   createdAt: string;
   department: string;
-  permissionGroup?: {
-    name: string;
-  };
+  permissionGroup?: import('./enhanced').DetailedPermissionGroup;
 }
 
 export interface User {
@@ -22,6 +20,8 @@ export interface User {
   email: string;
   password: string;
   permissionID: number;
+  role?: string;
+  permissionGroup?: import('./enhanced').DetailedPermissionGroup;
 }
 
 export interface PermissionGroup {

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import { useAuth } from './composables/useAuth';
+import { mapPermissionGroupToDetailed } from './composables/useAuth';
 import NavigationSidebar from './components/layout/NavigationSidebar.vue';
 import ToastContainer from './components/common/ToastContainer.vue';
 import ErrorBoundary from './components/common/ErrorBoundary.vue';
@@ -28,6 +29,20 @@ const handleUserAction = async (action: 'profile' | 'settings' | 'logout') => {
       break;
   }
 };
+
+const sidebarUser = computed(() => {
+  if (!currentUser.value) return undefined;
+  const user = currentUser.value;
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    permissionGroup: user.permissionGroup
+      ? mapPermissionGroupToDetailed(user.permissionGroup)
+      : undefined,
+  };
+});
 </script>
 
 <template>
@@ -35,7 +50,7 @@ const handleUserAction = async (action: 'profile' | 'settings' | 'logout') => {
     <!-- Authenticated Layout -->
     <div v-if="isAuthenticated && route.name !== 'login'" class="flex h-screen bg-background">
       <!-- Navigation Sidebar -->
-      <NavigationSidebar :current-user="currentUser || undefined" @user-action="handleUserAction" />
+      <NavigationSidebar :current-user="sidebarUser" @user-action="handleUserAction" />
 
       <!-- Main Content Area -->
       <main class="flex-1 overflow-auto bg-background">

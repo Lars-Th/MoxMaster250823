@@ -62,8 +62,10 @@ export class MockDataService {
       const enhanced: any = { ...user };
 
       if (params.include?.includes('permissionGroup')) {
-        const permissionGroup = permissionGroupsData.find(pg => pg.id === user.permissionID);
-        enhanced.permissionGroup = permissionGroup;
+        const permissionGroupRaw = permissionGroupsData.find(pg => pg.id === user.permissionID);
+        if (permissionGroupRaw) {
+          enhanced.permissionGroup = permissionGroupRaw;
+        }
       }
 
       return enhanced;
@@ -85,8 +87,10 @@ export class MockDataService {
     const enhanced: any = { ...user };
 
     if (params.include?.includes('permissionGroup')) {
-      const permissionGroup = permissionGroupsData.find(pg => pg.id === user.permissionID);
-      enhanced.permissionGroup = permissionGroup;
+      const permissionGroupRaw = permissionGroupsData.find(pg => pg.id === user.permissionID);
+      if (permissionGroupRaw) {
+        enhanced.permissionGroup = permissionGroupRaw;
+      }
     }
 
     return this.mockRequest(enhanced);

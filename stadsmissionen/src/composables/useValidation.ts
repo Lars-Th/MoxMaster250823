@@ -1,9 +1,7 @@
 import { ref } from 'vue';
-import type { UseValidationReturn, ValidationResult, ValidationRule } from '@/types';
+import type { UseValidationReturn, ValidationResult, ValidationRule } from '@/types/validation';
 import {
-  customValidationRules,
-  validateNestedProperty,
-  type ValidationSchema,
+  validateNestedProperty
 } from '@/schemas/validationSchemas';
 
 // Global state för validering
@@ -76,14 +74,6 @@ export function useValidation(): UseValidationReturn {
     return Object.values(results).every(result => result.isValid);
   };
 
-  // Enhanced validation with custom business rules
-  const validateWithCustomRules = (value: unknown, rule: string): string | null => {
-    if (customValidationRules[rule as keyof typeof customValidationRules]) {
-      return customValidationRules[rule as keyof typeof customValidationRules](value);
-    }
-    return null;
-  };
-
   // Valideringsregler
   const validationRules: Record<string, (value: unknown, fieldName: string) => string | null> = {
     required: (value: unknown, fieldName: string) => {
@@ -151,9 +141,9 @@ export function useValidation(): UseValidationReturn {
         error = validationRules[rule](value, fieldDisplayName);
       }
       // Then check custom business rules
-      else {
-        error = validateWithCustomRules(value, rule);
-      }
+      // else {
+      //   error = validateWithCustomRules(value, rule);
+      // }
 
       if (error) {
         errors.value[fieldName] = error;
@@ -226,11 +216,6 @@ export function useValidation(): UseValidationReturn {
     touchedFields.value[fieldName] = false;
   };
 
-  // Validate using predefined schemas
-  const validateWithSchema = (data: Record<string, unknown>, schema: ValidationSchema): boolean => {
-    return validateAll(data, schema);
-  };
-
   // Validate nested object properties
   const validateNestedField = (
     data: Record<string, unknown>,
@@ -248,14 +233,13 @@ export function useValidation(): UseValidationReturn {
     isFormValid,
     validateField,
     validateAll,
-    validateWithSchema,
-    validateNestedField,
     touchField,
     hasError,
     getError,
     isRequired,
     clearErrors,
     clearFieldError,
+    validateNestedField,
     errors,
     touchedFields,
   };
@@ -296,4 +280,4 @@ export const commonRules = {
 } as const;
 
 // Export types for backward compatibility
-export type { ValidationRule, ValidationResult, UseValidationReturn } from '@/types';
+export type { ValidationRule, ValidationResult, UseValidationReturn } from '@/types/validation';

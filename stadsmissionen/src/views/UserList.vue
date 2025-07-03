@@ -21,8 +21,8 @@ import { useToast } from '@/composables/useToast';
 import { useApiList } from '@/composables/useApi';
 import api from '@/api';
 
-const { showToast } = useToast();
 const router = useRouter();
+const toast = useToast();
 
 // const router = useRouter()
 
@@ -90,7 +90,7 @@ const loginAccounts = computed(() => {
   return usersWithPermissionGroups.value.map((user: User) => {
     return {
       id: user.id,
-      username: user.email.split('@')[0], // Extract username from email
+      username: user.email.split('@')[0],
       email: user.email,
       firstName: user.name.split(' ')[0] ?? '',
       lastName: user.name.split(' ').slice(1).join(' ') ?? '',
@@ -143,19 +143,19 @@ const columns: TableColumn<Record<string, unknown>>[] = [
 ];
 
 // Filter options for status
-const statusFilterOptions: { value: string; label: string }[] = [
-  { value: 'all', label: 'Alla statusar' },
-  { value: 'Aktiv', label: 'Aktiv' },
-  { value: 'Inaktiv', label: 'Inaktiv' },
-  { value: 'Låst', label: 'Låst' },
+const statusFilterOptions = [
+  { key: 'all', value: 'all', label: 'Alla statusar' },
+  { key: 'Aktiv', value: 'Aktiv', label: 'Aktiv' },
+  { key: 'Inaktiv', value: 'Inaktiv', label: 'Inaktiv' },
+  { key: 'Låst', value: 'Låst', label: 'Låst' },
 ];
 
 // Filter options for permission groups
-const roleFilterOptions: { value: string; label: string }[] = [
-  { value: 'all', label: 'Alla behörighetsgrupper' },
-  { value: 'Administrator', label: 'Administratör' },
-  { value: 'Moderator', label: 'Moderator' },
-  { value: 'Användare', label: 'Användare' },
+const roleFilterOptions = [
+  { key: 'all', value: 'all', label: 'Alla behörighetsgrupper' },
+  { key: 'Administrator', value: 'Administrator', label: 'Administratör' },
+  { key: 'Moderator', value: 'Moderator', label: 'Moderator' },
+  { key: 'Användare', value: 'Användare', label: 'Användare' },
 ];
 
 // Action buttons
@@ -178,32 +178,29 @@ const stats = computed(() => {
       { label: 'Administratörer', value: '0' },
     ];
   }
-
   return [
     {
       label: 'Totalt antal användare',
-      value: loginAccounts.value.length.toString(),
+      value: loginAccounts.value.filter((account: any) => account.status === 'Aktiv' || account.status === 'Inaktiv' || account.status === 'Låst').length.toString(),
     },
     {
       label: 'Aktiva användare',
-      value: loginAccounts.value.filter(account => account.status === 'Aktiv').length.toString(),
+      value: loginAccounts.value.filter((account: any) => account.status === 'Aktiv').length.toString(),
     },
     {
       label: 'Låsta konton',
-      value: loginAccounts.value.filter(account => account.status === 'Låst').length.toString(),
+      value: loginAccounts.value.filter((account: any) => account.status === 'Låst').length.toString(),
     },
     {
       label: 'Administratörer',
-      value: loginAccounts.value
-        .filter(account => account.role === 'Administrator')
-        .length.toString(),
+      value: loginAccounts.value.filter((account: any) => account.role === 'Administrator').length.toString(),
     },
   ];
 });
 
 // Table data with computed full name
 const tableData = computed(() =>
-  loginAccounts.value.map(account => ({
+  loginAccounts.value.map((account: any) => ({
     ...account,
     fullName: `${account.firstName} ${account.lastName}`.trim(),
   }))
@@ -221,22 +218,21 @@ const filteredData = computed(() => {
   // Apply search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
-    filtered = filtered.filter(
-      account =>
-        account.email.toLowerCase().includes(query) ||
-        account.fullName.toLowerCase().includes(query) ||
-        account.username.toLowerCase().includes(query)
+    filtered = filtered.filter((account: any) =>
+      account.email.toLowerCase().includes(query) ||
+      account.fullName.toLowerCase().includes(query) ||
+      account.username.toLowerCase().includes(query)
     );
   }
 
   // Apply status filter
   if (statusFilter.value !== 'all') {
-    filtered = filtered.filter(account => account.status === statusFilter.value);
+    filtered = filtered.filter((account: any) => account.status === statusFilter.value);
   }
 
   // Apply role filter
   if (roleFilter.value !== 'all') {
-    filtered = filtered.filter(account => account.role === roleFilter.value);
+    filtered = filtered.filter((account: any) => account.role === roleFilter.value);
   }
 
   return filtered;
@@ -273,7 +269,7 @@ function addUser() {
     !newUser.value.role
   ) {
     try {
-      showToast('Vänligen fyll i alla obligatoriska fält', 'error');
+      (toast as any).addToast('Vänligen fyll i alla obligatoriska fält', 'error');
     } catch (_error) {
       console.error('Failed to show toast');
     }
@@ -282,7 +278,7 @@ function addUser() {
 
   // Create new user account
   const newUserAccount: LoginAccount = {
-    id: Math.max(...loginAccounts.value.map(acc => acc.id)) + 1,
+    id: Math.max(...loginAccounts.value.map((acc: any) => acc.id)) + 1,
     username: newUser.value.username ?? newUser.value.email.split('@')[0],
     email: newUser.value.email,
     firstName: newUser.value.firstName,
@@ -290,7 +286,7 @@ function addUser() {
     role: newUser.value.role,
     status: newUser.value.status,
     lastLogin: 'Aldrig',
-    createdAt: new Date().toISOString().split('T')[0],
+    createdAt: new Date().toISOString().split('T')[0] || '',
     department: newUser.value.department,
   };
 
@@ -298,24 +294,26 @@ function addUser() {
   loginAccounts.value.push(newUserAccount);
 
   try {
-    showToast('Användare skapad framgångsrikt', 'success');
+    (toast as any).addToast('Användare skapad framgångsrikt', 'success');
   } catch (_error) {
     console.error('Failed to show toast');
   }
   closeAddUserModal();
 }
 
-function editUser(user: LoginAccount & { fullName: string }) {
+function editUser(item: Record<string, unknown>) {
+  const user = item as unknown as LoginAccount & { fullName: string };
   router.push(`/settings/login-accounts/${user.id}`);
 }
 
-function deleteUser(user: LoginAccount & { fullName: string }) {
+function deleteUser(item: Record<string, unknown>) {
+  const user = item as unknown as LoginAccount & { fullName: string };
   const userId = user.id;
-  const index = loginAccounts.value.findIndex(acc => acc.id === userId);
+  const index = loginAccounts.value.findIndex((acc: any) => acc.id === userId);
   if (index > -1) {
     loginAccounts.value.splice(index, 1);
     try {
-      showToast('Användare raderad', 'success');
+      (toast as any).addToast('Användare raderad', 'success');
     } catch (_error) {
       console.error('Failed to show toast');
     }
@@ -338,6 +336,11 @@ const rowActions = [
     class: 'text-destructive hover:text-destructive',
   },
 ];
+
+// In template, use a method for reload instead of direct globalThis.location.reload()
+function reloadPage() {
+  window.location.reload();
+}
 </script>
 
 <template>
@@ -362,7 +365,7 @@ const rowActions = [
     <div v-else-if="hasError" class="flex items-center justify-center py-12">
       <div class="text-center">
         <p class="text-destructive mb-2">Ett fel uppstod vid laddning av användare</p>
-        <Button variant="outline" @click="() => window.location.reload()">Försök igen</Button>
+        <Button variant="outline" @click="reloadPage">Försök igen</Button>
       </div>
     </div>
 

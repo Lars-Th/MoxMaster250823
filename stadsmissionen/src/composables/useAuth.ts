@@ -26,7 +26,11 @@ export function useAuth() {
       }
 
       // Set current user from API response
-      currentUser.value = response.data.user;
+      let user = response.data.user;
+      if (user && 'permissionGroup' in user && user.permissionGroup) {
+        user = { ...user, permissionGroup: mapPermissionGroupToDetailed(user.permissionGroup) };
+      }
+      currentUser.value = user as AuthUser;
 
       // Store user and token in localStorage for persistence
       localStorage.setItem('currentUser', JSON.stringify(currentUser.value));
@@ -71,7 +75,11 @@ export function useAuth() {
 
     if (storedUser) {
       try {
-        currentUser.value = JSON.parse(storedUser);
+        let parsedUser = JSON.parse(storedUser);
+        if (parsedUser && 'permissionGroup' in parsedUser && parsedUser.permissionGroup) {
+          parsedUser = { ...parsedUser, permissionGroup: mapPermissionGroupToDetailed(parsedUser.permissionGroup) };
+        }
+        currentUser.value = parsedUser as AuthUser;
 
         // If we have a token, validate it with the API
         if (storedToken && !storedToken.startsWith('mock-token-')) {
@@ -79,8 +87,12 @@ export function useAuth() {
             const response = await api.auth.getCurrentUser(storedToken);
             if (response.success && response.data) {
               // Token is valid, use fresh user data from API
-              currentUser.value = response.data;
-              localStorage.setItem('currentUser', JSON.stringify(response.data));
+              let freshUser = response.data;
+              if (freshUser && 'permissionGroup' in freshUser && freshUser.permissionGroup) {
+                freshUser = { ...freshUser, permissionGroup: mapPermissionGroupToDetailed(freshUser.permissionGroup) };
+              }
+              currentUser.value = freshUser as AuthUser;
+              localStorage.setItem('currentUser', JSON.stringify(freshUser));
             } else {
               // Token is invalid, clear stored data
               localStorage.removeItem('currentUser');
@@ -110,5 +122,24 @@ export function useAuth() {
     login,
     logout,
     initializeAuth,
+  };
+}
+
+export function mapPermissionGroupToDetailed(pg: any): any {
+  if (!pg) return undefined;
+  if ('id' in pg && 'administreraInloggningskonton' in pg) return pg;
+  // Map legacy or API shape to detailed
+  return {
+    id: pg.PermissionGroupID ?? pg.id,
+    name: pg.GroupName ?? pg.name,
+    administreraInloggningskonton: pg.administreraInloggningskonton ?? false,
+    hanteraAnvandare: pg.hanteraAnvandare ?? false,
+    laddaUppOchRedigera: pg.laddaUppOchRedigera ?? false,
+    visaOchLaddaNer: pg.visaOchLaddaNer ?? false,
+    lasaPubliceradeNyheter: pg.lasaPubliceradeNyheter ?? false,
+    publiceranyheter: pg.publiceranyheter ?? false,
+    administreraKategorier: pg.administreraKategorier ?? false,
+    redigeraVerksamheter: pg.redigeraVerksamheter ?? false,
+    skapaVerksamheter: pg.skapaVerksamheter ?? false,
   };
 }
