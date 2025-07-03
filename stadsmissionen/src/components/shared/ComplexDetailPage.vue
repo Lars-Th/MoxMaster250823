@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, Edit, FileText, Info, Plus, Save, Trash2, Undo2 } from 'lucide-vue-next';
 import type { Component } from 'vue';
+import type { TableColumn } from '@/types/ui';
 
 interface Field {
   key: string;
@@ -27,7 +28,7 @@ interface SubTable {
   title: string;
   icon?: Component;
   data: Record<string, unknown>[];
-  columns: import('@/types/ui').TableColumn<Record<string, unknown>>[];
+  columns: TableColumn<Record<string, unknown>>[];
   allowAdd?: boolean;
   allowEdit?: boolean;
   allowDelete?: boolean;

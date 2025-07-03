@@ -1,4 +1,5 @@
 // Core business entity interfaces
+import type { DetailedPermissionGroup } from './enhanced';
 
 export interface LoginAccount {
   id: number;
@@ -11,7 +12,7 @@ export interface LoginAccount {
   lastLogin: string;
   createdAt: string;
   department: string;
-  permissionGroup?: import('./enhanced').DetailedPermissionGroup;
+  permissionGroup?: DetailedPermissionGroup;
 }
 
 export interface User {
@@ -21,7 +22,7 @@ export interface User {
   password: string;
   permissionID: number;
   role?: string;
-  permissionGroup?: import('./enhanced').DetailedPermissionGroup;
+  permissionGroup?: DetailedPermissionGroup;
 }
 
 export interface PermissionGroup {

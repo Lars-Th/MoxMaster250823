@@ -2233,7 +2233,10 @@ onMounted(() => {
                           max="20"
                           class="w-20 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           @input="
-                            updateIndividualSpacing(index, parseFloat(($event.target as HTMLInputElement)?.value || '0'))
+                            updateIndividualSpacing(
+                              index,
+                              parseFloat(($event.target as HTMLInputElement)?.value || '0')
+                            )
                           "
                         />
                         <span class="text-sm text-gray-500">rem</span>
@@ -2298,7 +2301,10 @@ onMounted(() => {
                           max="10"
                           class="w-20 px-3 py-2 border border-purple-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                           @input="
-                            updateIndividualTextSize(index, parseFloat(($event.target as HTMLInputElement)?.value || '0'))
+                            updateIndividualTextSize(
+                              index,
+                              parseFloat(($event.target as HTMLInputElement)?.value || '0')
+                            )
                           "
                         />
                         <span class="text-sm text-gray-500">rem</span>
@@ -2365,9 +2371,7 @@ onMounted(() => {
                       </h5>
                       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div
-                          v-for="color in colorVariables.filter(
-                            c => c.category === category
-                          )"
+                          v-for="color in colorVariables.filter(c => c.category === category)"
                           :key="color.name"
                           class="space-y-2"
                         >
