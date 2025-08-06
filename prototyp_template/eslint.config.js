@@ -97,7 +97,12 @@ export default [
       'vue/no-v-html': 'warn',
       'vue/no-mutating-props': 'error',
       'vue/no-unused-components': 'warn',
-      'vue/no-unused-vars': 'warn',
+      'vue/no-unused-vars': [
+        'warn',
+        {
+          ignorePattern: '^_',
+        },
+      ],
       'vue/valid-v-slot': 'error',
       'vue/no-multiple-template-root': 'off', // Vue 3 allows multiple roots
 
