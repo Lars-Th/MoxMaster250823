@@ -133,8 +133,8 @@ const handleUserAction = (action: 'profile' | 'settings' | 'logout') => {
 // Handle image loading errors
 const handleImageError = (event: Event) => {
   const img = event.target as any;
-  if (img.src !== '/src/assets/images/logo-placeholder.png') {
-    img.src = '/src/assets/images/logo-placeholder.png';
+  if (img.src !== '/images/logo-placeholder.png') {
+    img.src = '/images/logo-placeholder.png';
   }
 };
 </script>
@@ -144,7 +144,7 @@ const handleImageError = (event: Event) => {
     <!-- Sidebar Header -->
     <div class="p-4">
       <img
-        :src="logoSrc || '/src/assets/images/logo-placeholder.png'"
+        :src="logoSrc || '/images/logo-placeholder.png'"
         :alt="logoAlt || 'Project Specific'"
         class="w-full h-auto max-h-24 object-contain"
         @error="handleImageError"

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff, LogIn } from 'lucide-vue-next';
-import logo from '@/assets/images/logo-placeholder.png';
+import logo from '/images/logo-placeholder.png';
 
 const { login } = useAuth();
 
