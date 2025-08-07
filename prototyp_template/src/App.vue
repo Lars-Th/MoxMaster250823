@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import { useAuth } from './composables/useAuth';
-import { mapPermissionGroupToDetailed } from './composables/useAuth';
+import { mapPermissionGroupToDetailed, useAuth } from './composables/useAuth';
 import NavigationSidebar from './components/layout/NavigationSidebar.vue';
 import ToastContainer from './components/common/ToastContainer.vue';
 import ErrorBoundary from './components/common/ErrorBoundary.vue';

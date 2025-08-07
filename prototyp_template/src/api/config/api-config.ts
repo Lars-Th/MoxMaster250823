@@ -10,10 +10,7 @@ export class ApiConfiguration {
 
   constructor(baseURL?: string) {
     this.httpClient = new HttpClient({
-      baseURL:
-        baseURL ??
-        (import.meta.env as unknown as { VITE_API_BASE_URL: string }).VITE_API_BASE_URL ??
-        '/api',
+      baseURL: baseURL ?? (import.meta.env?.['VITE_API_BASE_URL'] as string) ?? '/api',
     });
 
     // Initialize all services
