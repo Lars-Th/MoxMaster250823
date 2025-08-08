@@ -1,20 +1,20 @@
 export interface MainNavigationItem {
   name: string;
   path: string;
-  icon: any;
+  icon: unknown;
   permissions: string[];
   dropdown?: NavigationGroup[];
 }
 
 export interface NavigationGroup {
   name?: string;
-  icon?: any;
+  icon?: unknown;
   children: NavigationChild[];
 }
 
 export interface NavigationChild {
   name: string;
   path: string;
-  icon: any;
+  icon: unknown;
   permissions: string[];
 }

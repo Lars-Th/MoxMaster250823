@@ -63,7 +63,7 @@ const getIcon = (type?: string) => {
       leave-to-class="transform translate-x-full opacity-0"
     >
       <div
-        v-for="notification in notifications"
+        v-for="notification in notifications as unknown as import('@/types').Notification[]"
         :key="notification.id"
         class="notification-item"
         :class="getStyles(notification.type).container"

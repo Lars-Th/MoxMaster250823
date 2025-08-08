@@ -15,13 +15,13 @@ router.beforeEach(async (to, _from, next) => {
 
   // Check for authenticated user
   try {
-    let currentUser = null;
+    let currentUser: { role?: string } | null = null;
 
     // Try to get user from localStorage first
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       try {
-        currentUser = JSON.parse(storedUser);
+        currentUser = JSON.parse(storedUser) as { role?: string } | null;
       } catch (error) {
         console.error('[Router] Error parsing stored user:', error);
         localStorage.removeItem('currentUser');
@@ -55,7 +55,7 @@ router.beforeEach(async (to, _from, next) => {
 
     // Check permissions for the route
     const routeName = to.name as string;
-    if (routeName && !hasPermission(currentUser.role, routeName)) {
+    if (routeName && !hasPermission(currentUser.role ?? '', routeName)) {
       console.warn(`[Router] Access denied to ${to.path}`);
       console.warn(`[Router] User role:`, currentUser.role);
       console.warn(`[Router] Route:`, routeName);

@@ -26,11 +26,14 @@ export function useAuth() {
       }
 
       // Set current user from API response
-      let { user } = response.data;
+      let { user } = response.data as { user: AuthUser };
       if (user && 'permissionGroup' in user && user.permissionGroup) {
-        user = { ...user, permissionGroup: mapPermissionGroupToDetailed(user.permissionGroup) };
+        user = {
+          ...user,
+          permissionGroup: mapPermissionGroupToDetailed(user.permissionGroup) ?? undefined,
+        };
       }
-      currentUser.value = user as AuthUser;
+      currentUser.value = user;
 
       // Store user and token in localStorage for persistence
       localStorage.setItem('currentUser', JSON.stringify(currentUser.value));
@@ -75,14 +78,14 @@ export function useAuth() {
 
     if (storedUser) {
       try {
-        let parsedUser = JSON.parse(storedUser);
+        let parsedUser = JSON.parse(storedUser) as AuthUser;
         if (parsedUser && 'permissionGroup' in parsedUser && parsedUser.permissionGroup) {
           parsedUser = {
             ...parsedUser,
-            permissionGroup: mapPermissionGroupToDetailed(parsedUser.permissionGroup),
+            permissionGroup: mapPermissionGroupToDetailed(parsedUser.permissionGroup) ?? undefined,
           };
         }
-        currentUser.value = parsedUser as AuthUser;
+        currentUser.value = parsedUser;
 
         // If we have a token, validate it with the API
         if (storedToken && !storedToken.startsWith('mock-token-')) {
@@ -90,14 +93,15 @@ export function useAuth() {
             const response = await api.auth.getCurrentUser(storedToken);
             if (response.success && response.data) {
               // Token is valid, use fresh user data from API
-              let freshUser = response.data;
+              let freshUser = response.data as AuthUser;
               if (freshUser && 'permissionGroup' in freshUser && freshUser.permissionGroup) {
                 freshUser = {
                   ...freshUser,
-                  permissionGroup: mapPermissionGroupToDetailed(freshUser.permissionGroup),
+                  permissionGroup:
+                    mapPermissionGroupToDetailed(freshUser.permissionGroup) ?? undefined,
                 };
               }
-              currentUser.value = freshUser as AuthUser;
+              currentUser.value = freshUser;
               localStorage.setItem('currentUser', JSON.stringify(freshUser));
             } else {
               // Token is invalid, clear stored data
@@ -131,13 +135,30 @@ export function useAuth() {
   };
 }
 
-export function mapPermissionGroupToDetailed(pg: any): any {
+type LegacyPermissionGroup = {
+  PermissionGroupID?: number;
+  GroupName?: string;
+  administreraInloggningskonton?: boolean;
+  hanteraAnvandare?: boolean;
+  laddaUppOchRedigera?: boolean;
+  visaOchLaddaNer?: boolean;
+  lasaPubliceradeNyheter?: boolean;
+  publiceranyheter?: boolean;
+  administreraKategorier?: boolean;
+  redigeraVerksamheter?: boolean;
+  skapaVerksamheter?: boolean;
+  id?: number;
+  name?: string;
+};
+export function mapPermissionGroupToDetailed(
+  pg: LegacyPermissionGroup | AuthUser['permissionGroup']
+): AuthUser['permissionGroup'] | undefined {
   if (!pg) return undefined;
-  if ('id' in pg && 'administreraInloggningskonton' in pg) return pg;
+  if ('id' in pg && 'administreraInloggningskonton' in pg) return pg as AuthUser['permissionGroup'];
   // Map legacy or API shape to detailed
   return {
-    id: pg.PermissionGroupID ?? pg.id,
-    name: pg.GroupName ?? pg.name,
+    id: pg.PermissionGroupID ?? pg.id ?? 0,
+    name: pg.GroupName ?? pg.name ?? '',
     administreraInloggningskonton: pg.administreraInloggningskonton ?? false,
     hanteraAnvandare: pg.hanteraAnvandare ?? false,
     laddaUppOchRedigera: pg.laddaUppOchRedigera ?? false,
@@ -147,5 +168,5 @@ export function mapPermissionGroupToDetailed(pg: any): any {
     administreraKategorier: pg.administreraKategorier ?? false,
     redigeraVerksamheter: pg.redigeraVerksamheter ?? false,
     skapaVerksamheter: pg.skapaVerksamheter ?? false,
-  };
+  } as AuthUser['permissionGroup'];
 }

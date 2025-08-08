@@ -1,9 +1,10 @@
 import { BaseService } from './base.service';
 import type { ApiResponse } from '@/types';
 import type { LoginRequest, LoginResponse, User } from '@/types/auth';
+import type { HttpClient } from '../client/http-client';
 
-export class AuthService extends BaseService<any> {
-  constructor(httpClient: any) {
+export class AuthService extends BaseService<unknown> {
+  constructor(httpClient: HttpClient) {
     super(httpClient, '/auth');
   }
 

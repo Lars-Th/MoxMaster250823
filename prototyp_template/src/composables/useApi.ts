@@ -27,7 +27,7 @@ export function useApi(
 ): UseApiReturn {
   const { immediate = false, cache: useCache = false, cacheKey, onSuccess, onError } = options;
 
-  const data = shallowRef<any>(null);
+  const data = shallowRef<unknown>(null);
   const loading = ref(false);
   const error = ref<ApiError | null>(null);
 
@@ -143,9 +143,11 @@ export function useApiList<T>(
 ) {
   const api = useApi(apiCall, { immediate: true, cache: true, ...options });
 
-  const isEmpty = computed(
-    () => api.isSuccess.value && (!api.data.value || api.data.value.length === 0)
-  );
+  const isEmpty = computed(() => {
+    const v = api.data.value;
+    if (!api.isSuccess.value || v == null) return false;
+    return Array.isArray(v) && v.length === 0;
+  });
 
   return {
     ...api,

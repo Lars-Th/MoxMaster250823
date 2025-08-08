@@ -2,8 +2,8 @@ export interface Field {
   key: string;
   label: string;
   type?: 'text' | 'date' | 'number' | 'email' | 'textarea' | 'select' | 'checkbox';
-  value: any;
-  options?: Array<{ label: string; value: any }>;
+  value: string | number | boolean | null | undefined;
+  options?: Array<{ label: string; value: string | number | boolean }>;
   readonly?: boolean;
   required?: boolean;
 }
@@ -11,17 +11,17 @@ export interface Field {
 export interface Tab {
   id: string;
   label: string;
-  icon?: any;
+  icon?: unknown;
   content: Field[];
 }
 
 export interface SubTable {
   title: string;
   headers: string[];
-  data: Record<string, any>[];
+  data: Array<Record<string, unknown>>;
   actions?: Array<{
     label: string;
-    action: (item: any) => void;
+    action: (item: Record<string, unknown>) => void;
     variant?: 'primary' | 'secondary' | 'danger';
   }>;
 }
@@ -36,13 +36,13 @@ export interface ActionButton {
   label: string;
   action: () => void;
   variant?: 'primary' | 'secondary' | 'danger';
-  icon?: any;
+  icon?: unknown;
   disabled?: boolean;
 }
 
 export interface SimpleFilterOption {
   label: string;
-  value: any;
+  value: string | number | boolean;
   count?: number;
 }
 
@@ -51,14 +51,14 @@ export interface Filter {
   label: string;
   type: 'select' | 'multiselect' | 'date' | 'daterange' | 'text';
   options?: SimpleFilterOption[];
-  value: any;
+  value: string | number | boolean | Date | Array<string | number | boolean | Date>;
 }
 
 export interface FilterConfig {
   key: string;
   label: string;
   type: 'text' | 'select' | 'date' | 'daterange';
-  options?: Array<{ label: string; value: any }>;
+  options?: Array<{ label: string; value: string | number | boolean }>;
   placeholder?: string;
   multiple?: boolean;
 }
@@ -74,7 +74,7 @@ export interface TreeNode {
   id: string;
   label: string;
   children?: TreeNode[];
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 export interface SpacingVariable {

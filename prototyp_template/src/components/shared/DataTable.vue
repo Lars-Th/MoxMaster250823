@@ -109,7 +109,12 @@ const filteredData = computed(() => {
       props.searchFields.length === 0 ||
       props.searchFields.some(field => {
         const value = field.includes('.')
-          ? field.split('.').reduce((obj: any, key: string) => obj?.[key], item)
+          ? field.split('.').reduce<unknown>((obj: unknown, key: string) => {
+              if (obj && typeof obj === 'object') {
+                return (obj as Record<string, unknown>)[key];
+              }
+              return undefined;
+            }, item)
           : item[field];
         return value && String(value).toLowerCase().includes(searchQuery.value.toLowerCase());
       });

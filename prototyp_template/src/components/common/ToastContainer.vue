@@ -31,8 +31,8 @@ const toastsByPosition = computed(() => {
   };
 
   toasts.value.forEach((toast: ToastType) => {
-    const position = toast.position ?? config.position ?? 'top-right';
-    (groups as any)[position].push(toast);
+    const position: ToastPosition = toast.position ?? config.position ?? 'top-right';
+    groups[position].push(toast);
   });
 
   return groups;

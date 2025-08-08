@@ -27,13 +27,25 @@ export function mapPermissionGroup(pg: PermissionGroup): DetailedPermissionGroup
     redigeraVerksamheter: false,
     skapaVerksamheter: false,
   };
-  for (const perm of pg.Permissions) {
-    const key = permissionMap[perm];
-    if (key) (base as any)[key] = true;
-  }
-  return {
+  (pg.Permissions || []).forEach(permissionLabel => {
+    const key = permissionMap[permissionLabel];
+    if (key) {
+      const baseKey = key as keyof typeof base;
+      base[baseKey] = true;
+    }
+  });
+  const detailed: DetailedPermissionGroup = {
     id: pg.PermissionGroupID,
     name: pg.GroupName,
-    ...base,
+    administreraInloggningskonton: base.administreraInloggningskonton,
+    hanteraAnvandare: base.hanteraAnvandare,
+    laddaUppOchRedigera: base.laddaUppOchRedigera,
+    visaOchLaddaNer: base.visaOchLaddaNer,
+    lasaPubliceradeNyheter: base.lasaPubliceradeNyheter,
+    publiceranyheter: base.publiceranyheter,
+    administreraKategorier: base.administreraKategorier,
+    redigeraVerksamheter: base.redigeraVerksamheter,
+    skapaVerksamheter: base.skapaVerksamheter,
   };
+  return detailed;
 }

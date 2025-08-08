@@ -12,7 +12,7 @@ export interface BaseRequestParams {
   search?: string;
   sort?: string;
   order?: 'asc' | 'desc';
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
 }
 
 // Combined parameters for API calls with relationships
@@ -46,7 +46,7 @@ export interface WhereClause {
     | 'isNull'
     | 'isNotNull'
     | 'between';
-  value: any;
+  value: unknown;
   logicalOperator?: 'AND' | 'OR';
 }
 
@@ -173,7 +173,7 @@ export interface ApiOperationOptions {
   retries?: number;
   retryDelay?: number;
   validateResponse?: boolean;
-  transformResponse?: (data: any) => any;
+  transformResponse?: (data: unknown) => unknown;
 }
 
 // Generic API service interface
@@ -218,7 +218,7 @@ export interface ApiService<T> {
 export interface BulkOperationResult<T> {
   successful: T[];
   failed: Array<{
-    item: any;
+    item: unknown;
     error: string;
     index: number;
   }>;
@@ -236,24 +236,24 @@ export interface ImportResult {
   errors: Array<{
     row: number;
     error: string;
-    data: any;
+    data: unknown;
   }>;
   warnings: Array<{
     row: number;
     warning: string;
-    data: any;
+    data: unknown;
   }>;
 }
 
 // Aggregation result
 export interface AggregationResult {
   groups: Array<{
-    groupValues: Record<string, any>;
-    aggregates: Record<string, any>;
+    groupValues: Record<string, unknown>;
+    aggregates: Record<string, unknown>;
     count: number;
   }>;
   totalGroups: number;
-  overallAggregates?: Record<string, any>;
+  overallAggregates?: Record<string, unknown>;
 }
 
 // Validation result

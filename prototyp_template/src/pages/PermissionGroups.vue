@@ -62,10 +62,11 @@ const stats = computed(() => {
     ];
   }
 
+  const list = permissionGroups.value as unknown as Array<Record<string, unknown>>;
   return [
     {
       label: 'Totalt antal grupper',
-      value: permissionGroups.value.length.toString(),
+      value: list.length.toString(),
     },
     {
       label: 'Systemgrupper',
@@ -73,7 +74,7 @@ const stats = computed(() => {
     },
     {
       label: 'Anpassade grupper',
-      value: (permissionGroups.value.length - 1).toString(),
+      value: (list.length - 1).toString(),
     },
     {
       label: 'Totalt antal användare',
@@ -83,7 +84,9 @@ const stats = computed(() => {
 });
 
 // Table data
-const tableData = computed(() => permissionGroups.value ?? []);
+const tableData = computed<Record<string, unknown>[]>(
+  () => (permissionGroups.value as Record<string, unknown>[] | null) ?? []
+);
 
 // Action methods
 function addNewGroup() {

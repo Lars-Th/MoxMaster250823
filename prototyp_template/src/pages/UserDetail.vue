@@ -55,14 +55,9 @@ const {
 
 // Get the permission group name from the enhanced user data
 const userPermissionGroup = computed(() => {
-  if (!user.value) return 'Laddar...';
-
-  // Use the permission group from the enhanced API response
-  if (user.value.permissionGroup) {
-    return user.value.permissionGroup.name;
-  }
-
-  // Fallback if permission group is not loaded
+  const u = user.value as { permissionGroup?: { name?: string } } | null;
+  if (!u) return 'Laddar...';
+  if (u.permissionGroup?.name) return u.permissionGroup.name;
   return 'Okänd grupp';
 });
 
@@ -88,10 +83,11 @@ const isUpdatingPassword = ref(false);
 
 // Update userProfile when user data is loaded
 const updateUserProfile = () => {
-  if (user.value) {
+  const u = user.value as { name?: string; email?: string } | null;
+  if (u) {
     userProfile.value = {
-      name: user.value.name ?? '',
-      email: user.value.email ?? '',
+      name: u.name ?? '',
+      email: u.email ?? '',
       adminGroup: userPermissionGroup.value,
     };
     originalProfile.value = { ...userProfile.value };
@@ -133,7 +129,12 @@ const saveChanges = async () => {
 
   // For regular users, we need user.value to get permissionID
   // For "My Account", we can use currentUser as fallback
-  const sourceUser = user.value ?? (isMyAccount.value ? currentUser.value : null);
+  const sourceUser =
+    (user.value as {
+      permissionID?: number;
+      permissionGroup?: { id?: number };
+    } | null) ??
+    (isMyAccount.value ? ((currentUser.value ?? null) as unknown as { id?: number } | null) : null);
   if (!sourceUser) return;
 
   isSaving.value = true;
@@ -141,7 +142,9 @@ const saveChanges = async () => {
   const updateData = {
     name: userProfile.value.name,
     email: userProfile.value.email,
-    permissionID: sourceUser.permissionID ?? sourceUser.permissionGroup?.id, // Keep existing permission
+    permissionID:
+      (sourceUser as { permissionID?: number }).permissionID ??
+      (sourceUser as { permissionGroup?: { id?: number } }).permissionGroup?.id, // Keep existing permission
   };
 
   try {
@@ -151,7 +154,7 @@ const saveChanges = async () => {
       // Update local data immediately
       if (user.value) {
         // Use spread operator instead of Object.assign for better compatibility
-        user.value = { ...user.value, ...response.data };
+        user.value = { ...(user.value as object), ...response.data } as any;
       }
 
       // If this is "my account", also update the current user in auth
@@ -226,7 +229,7 @@ onMounted(() => {
     <div class="max-w-full mx-auto px-6">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">{{ user?.name ?? 'Användare' }}</h1>
+        <h1 class="text-3xl font-bold text-gray-900">{{ (user as any)?.name ?? 'Användare' }}</h1>
         <p class="text-gray-600 mt-2">Hantera användarens kontoinställningar</p>
       </div>
 
@@ -282,16 +285,17 @@ onMounted(() => {
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Behörighetsgrupp</label>
           <Input
-            :value="user?.permissionGroup?.name ?? 'Laddar...'"
+            :value="(user as any)?.permissionGroup?.name ?? 'Laddar...'"
             type="text"
             class="w-full bg-gray-100"
             readonly
           />
           <!-- Temporary debug info -->
           <div class="text-xs text-gray-500 mt-1">
-            Debug: {{ user?.permissionGroup ? 'Has permissionGroup' : 'No permissionGroup' }} |
-            PermissionID: {{ user?.permissionID }} | Group Name:
-            {{ user?.permissionGroup?.name ?? 'N/A' }}
+            Debug:
+            {{ (user as any)?.permissionGroup ? 'Has permissionGroup' : 'No permissionGroup' }} |
+            PermissionID: {{ (user as any)?.permissionID }} | Group Name:
+            {{ (user as any)?.permissionGroup?.name ?? 'N/A' }}
           </div>
         </div>
 

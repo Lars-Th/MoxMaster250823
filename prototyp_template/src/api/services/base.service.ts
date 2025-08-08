@@ -47,7 +47,7 @@ export abstract class BaseService<T> {
   protected async get<TResult>(
     endpoint: string,
     params?: QueryParams,
-    options?: any
+    options?: Record<string, unknown>
   ): Promise<ApiResponse<TResult>> {
     return this.httpClient.get<TResult>(endpoint, params, options);
   }
@@ -55,7 +55,7 @@ export abstract class BaseService<T> {
   protected async post<TResult>(
     endpoint: string,
     data?: unknown,
-    options?: any
+    options?: Record<string, unknown>
   ): Promise<ApiResponse<TResult>> {
     return this.httpClient.post<TResult>(endpoint, data, options);
   }

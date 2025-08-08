@@ -1,4 +1,4 @@
-import type { PermissionGroup, User } from './index';
+import type { User } from './index';
 
 // Enhanced user types with relational data
 export interface DetailedPermissionGroup {
@@ -37,7 +37,7 @@ export interface AuthUser {
   email: string;
   role: string;
   stadsmission?: number;
-  permissionGroup?: PermissionGroup;
+  permissionGroup?: DetailedPermissionGroup;
 }
 
 // Enhanced types for API operations and relationship loading
@@ -49,7 +49,7 @@ export interface RequestParams {
   search?: string;
   sort?: string;
   order?: 'asc' | 'desc';
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
 }
 
 // Combined parameters for API calls with relationships
@@ -66,7 +66,7 @@ export interface TableOperationOptions {
   sortOrder?: 'asc' | 'desc';
 
   // Filtering
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
   search?: string;
 
   // Relationship loading
@@ -92,7 +92,7 @@ export interface TableData<T> {
 }
 
 // Column definition for tables
-export interface TableColumn<T = any> {
+export interface TableColumn<T = Record<string, unknown>> {
   key: keyof T | string;
   label: string;
   sortable?: boolean;
@@ -101,8 +101,8 @@ export interface TableColumn<T = any> {
   type?: 'text' | 'number' | 'date' | 'boolean' | 'custom' | 'actions';
   width?: string;
   align?: 'left' | 'center' | 'right';
-  formatter?: (value: any, item: T) => string;
-  component?: any; // Vue component for custom rendering
+  formatter?: (value: unknown, item: T) => string;
+  component?: unknown; // Vue component for custom rendering
 }
 
 // Table configuration
@@ -138,16 +138,16 @@ export interface TableConfig<T> {
   onSort?: (column: string, order: 'asc' | 'desc') => void;
 
   // Filtering
-  onFilter?: (filters: Record<string, any>) => void;
+  onFilter?: (filters: Record<string, unknown>) => void;
   onSearch?: (searchTerm: string) => void;
 }
 
 // Validation rule
 export interface ValidationRule {
   type: 'required' | 'email' | 'min' | 'max' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
-  value?: any;
+  value?: unknown;
   message: string;
-  validator?: (value: any, formData: any) => boolean;
+  validator?: (value: unknown, formData: unknown) => boolean;
 }
 
 // Entity operation types
@@ -238,7 +238,7 @@ export interface FilterConfig {
     field: string;
     type: 'text' | 'number' | 'date' | 'select' | 'multiselect' | 'boolean' | 'range';
     label: string;
-    options?: Array<{ value: any; label: string }>;
+    options?: Array<{ value: string | number | boolean; label: string }>;
     operator?:
       | 'equals'
       | 'contains'
@@ -281,7 +281,7 @@ export interface WidgetConfig {
   refreshInterval?: number; // in seconds
   dataSource: {
     entity: string;
-    filters?: Record<string, any>;
+    filters?: Record<string, unknown>;
     aggregation?: {
       groupBy?: string[];
       functions?: Array<{

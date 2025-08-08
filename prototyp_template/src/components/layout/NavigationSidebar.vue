@@ -115,10 +115,12 @@ onMounted(() => {
 });
 
 // Check if any child route of a dropdown menu is active
-const hasActiveChild = (item: any) => {
+type NavChild = { path: string; icon?: unknown; name?: string };
+type NavSection = { children: NavChild[] };
+type NavItem = { name: string; icon?: unknown; path?: string; dropdown?: NavSection[] };
+const hasActiveChild = (item: NavItem) => {
   if (!item.dropdown) return false;
-  const dropdown = item.dropdown as Array<{ children: Array<{ path: string }> }>;
-  return dropdown.some(section => section.children.some(child => isActiveRoute(child.path)));
+  return item.dropdown.some(section => section.children.some(child => isActiveRoute(child.path)));
 };
 
 // Emits for parent component
@@ -132,7 +134,7 @@ const handleUserAction = (action: 'profile' | 'settings' | 'logout') => {
 
 // Handle image loading errors
 const handleImageError = (event: Event) => {
-  const img = event.target as any;
+  const img = event.target as HTMLImageElement;
   if (img.src !== '/images/logo-placeholder.png') {
     img.src = '/images/logo-placeholder.png';
   }

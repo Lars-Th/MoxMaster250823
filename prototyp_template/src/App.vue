@@ -5,6 +5,7 @@ import { mapPermissionGroupToDetailed, useAuth } from './composables/useAuth';
 import NavigationSidebar from './components/layout/NavigationSidebar.vue';
 import ToastContainer from './components/common/ToastContainer.vue';
 import ErrorBoundary from './components/common/ErrorBoundary.vue';
+import type { DetailedPermissionGroup } from '@/types/enhanced';
 
 const { currentUser, isAuthenticated, logout, initializeAuth } = useAuth();
 const route = useRoute();
@@ -29,7 +30,15 @@ const handleUserAction = async (action: 'profile' | 'settings' | 'logout') => {
   }
 };
 
-const sidebarUser = computed(() => {
+type SidebarUser = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  permissionGroup?: DetailedPermissionGroup;
+};
+
+const sidebarUser = computed<SidebarUser | undefined>(() => {
   if (!currentUser.value) return undefined;
   const user = currentUser.value;
   return {
@@ -38,7 +47,7 @@ const sidebarUser = computed(() => {
     email: user.email,
     role: user.role,
     permissionGroup: user.permissionGroup
-      ? mapPermissionGroupToDetailed(user.permissionGroup)
+      ? (mapPermissionGroupToDetailed(user.permissionGroup) ?? undefined)
       : undefined,
   };
 });

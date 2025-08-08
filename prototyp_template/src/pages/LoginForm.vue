@@ -113,8 +113,8 @@ const sortedUsers = computed(() => {
   };
 
   return [...demoUsers.value].sort((a, b) => {
-    const aLevel = roleHierarchy[a.role] || 0;
-    const bLevel = roleHierarchy[b.role] || 0;
+    const aLevel = roleHierarchy[a.role] ?? 0;
+    const bLevel = roleHierarchy[b.role] ?? 0;
     return bLevel - aLevel; // Descending order
   });
 });

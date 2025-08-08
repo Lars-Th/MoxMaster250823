@@ -73,7 +73,7 @@ const {
   () =>
     api.users.getAll({
       include: ['permissionGroup'],
-    }),
+    }) as Promise<ReturnType<typeof api.users.getAll>>,
   {
     cacheKey: 'users-with-permission-groups',
   }
@@ -84,13 +84,13 @@ const isLoading = computed(() => Boolean(usersLoading.value));
 const hasError = computed(() => usersError.value !== null);
 
 // Transform API data to match LoginAccount interface
-const loginAccounts = computed(() => {
+const loginAccounts = computed<LoginAccount[]>(() => {
   if (!usersWithPermissionGroups.value) return [];
 
-  return usersWithPermissionGroups.value.map((user: User) => {
+  return (usersWithPermissionGroups.value as User[]).map((user: User) => {
     return {
       id: user.id,
-      username: user.email.split('@')[0],
+      username: user.email.split('@')[0] ?? user.email,
       email: user.email,
       firstName: user.name.split(' ')[0] ?? '',
       lastName: user.name.split(' ').slice(1).join(' ') ?? '',
@@ -191,19 +191,19 @@ const stats = computed(() => {
     {
       label: 'Aktiva användare',
       value: loginAccounts.value
-        .filter((account: any) => account.status === 'Aktiv')
+        .filter((account: LoginAccount) => account.status === 'Aktiv')
         .length.toString(),
     },
     {
       label: 'Låsta konton',
       value: loginAccounts.value
-        .filter((account: any) => account.status === 'Låst')
+        .filter((account: LoginAccount) => account.status === 'Låst')
         .length.toString(),
     },
     {
       label: 'Administratörer',
       value: loginAccounts.value
-        .filter((account: any) => account.role === 'Administrator')
+        .filter((account: LoginAccount) => account.role === 'Administrator')
         .length.toString(),
     },
   ];
@@ -211,7 +211,7 @@ const stats = computed(() => {
 
 // Table data with computed full name
 const tableData = computed(() =>
-  loginAccounts.value.map((account: any) => ({
+  loginAccounts.value.map((account: LoginAccount) => ({
     ...account,
     fullName: `${account.firstName} ${account.lastName}`.trim(),
   }))
@@ -230,7 +230,7 @@ const filteredData = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     filtered = filtered.filter(
-      (account: any) =>
+      (account: LoginAccount & { fullName: string }) =>
         account.email.toLowerCase().includes(query) ||
         account.fullName.toLowerCase().includes(query) ||
         account.username.toLowerCase().includes(query)
@@ -239,12 +239,14 @@ const filteredData = computed(() => {
 
   // Apply status filter
   if (statusFilter.value !== 'all') {
-    filtered = filtered.filter((account: any) => account.status === statusFilter.value);
+    filtered = filtered.filter(
+      (account: LoginAccount) => account.status === (statusFilter.value as LoginAccount['status'])
+    );
   }
 
   // Apply role filter
   if (roleFilter.value !== 'all') {
-    filtered = filtered.filter((account: any) => account.role === roleFilter.value);
+    filtered = filtered.filter((account: LoginAccount) => account.role === roleFilter.value);
   }
 
   return filtered;
@@ -281,7 +283,7 @@ function addUser() {
     !newUser.value.role
   ) {
     try {
-      (toast as any).addToast('Vänligen fyll i alla obligatoriska fält', 'error');
+      toast.error('Valideringsfel', 'Vänligen fyll i alla obligatoriska fält');
     } catch (_error) {
       console.error('Failed to show toast');
     }
@@ -290,7 +292,7 @@ function addUser() {
 
   // Create new user account
   const newUserAccount: LoginAccount = {
-    id: Math.max(...loginAccounts.value.map((acc: any) => acc.id)) + 1,
+    id: Math.max(...loginAccounts.value.map((acc: LoginAccount) => acc.id)) + 1,
     username: newUser.value.username ?? newUser.value.email.split('@')[0],
     email: newUser.value.email,
     firstName: newUser.value.firstName,
@@ -306,7 +308,7 @@ function addUser() {
   loginAccounts.value.push(newUserAccount);
 
   try {
-    (toast as any).addToast('Användare skapad framgångsrikt', 'success');
+    toast.success('Klart', 'Användare skapad framgångsrikt');
   } catch (_error) {
     console.error('Failed to show toast');
   }
@@ -321,11 +323,11 @@ function editUser(item: Record<string, unknown>) {
 function deleteUser(item: Record<string, unknown>) {
   const user = item as unknown as LoginAccount & { fullName: string };
   const userId = user.id;
-  const index = loginAccounts.value.findIndex((acc: any) => acc.id === userId);
+  const index = loginAccounts.value.findIndex((acc: LoginAccount) => acc.id === userId);
   if (index > -1) {
     loginAccounts.value.splice(index, 1);
     try {
-      (toast as any).addToast('Användare raderad', 'success');
+      toast.success('Klart', 'Användare raderad');
     } catch (_error) {
       console.error('Failed to show toast');
     }
