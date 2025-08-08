@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { bottomNavigationItems, mainNavigationItems } from '@/router/router';
+import { bottomNavigationItems, mainNavigationItems } from '@/router';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {

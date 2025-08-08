@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import type { UseValidationReturn, ValidationResult, ValidationRule } from '@/types/validation';
-import { validateNestedProperty } from '@/schemas/validationSchemas';
+import { validateNestedProperty } from '@/validation/schemas';
 
 // Global state för validering
 const errors = ref<Record<string, string | null>>({});

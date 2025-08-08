@@ -1905,7 +1905,7 @@ onMounted(() => {
             <div class="mb-4">
               <h2 class="text-xl font-semibold text-gray-900">{{ selectedComponent.name }}</h2>
               <p class="text-sm text-gray-500">
-                {{ selectedComponent.path.startsWith('pages/') ? '@/views/' : '@/components/'
+                {{ selectedComponent.path.startsWith('pages/') ? '@/pages/' : '@/components/'
                 }}{{ selectedComponent.path }}
               </p>
               <p class="text-xs text-gray-400 mt-1">

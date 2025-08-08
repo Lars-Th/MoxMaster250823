@@ -1,16 +1,16 @@
 import type { RouteRecordRaw } from 'vue-router';
 
 // Lazy load all views
-const LoginForm = () => import('@/views/LoginForm.vue');
+const LoginForm = () => import('@/pages/LoginForm.vue');
 
 // User management
-const UserList = () => import('@/views/UserList.vue');
-const UserDetail = () => import('@/views/UserDetail.vue');
-const PermissionGroups = () => import('@/views/PermissionGroups.vue');
+const UserList = () => import('@/pages/UserList.vue');
+const UserDetail = () => import('@/pages/UserDetail.vue');
+const PermissionGroups = () => import('@/pages/PermissionGroups.vue');
 
 // Development
-const CustomComponents = () => import('@/views/CustomComponents.vue');
-const Placeholder = () => import('@/views/Placeholder.vue');
+const CustomComponents = () => import('@/pages/CustomComponents.vue');
+const Placeholder = () => import('@/pages/Placeholder.vue');
 
 // Auth routes
 export const authRoutes: RouteRecordRaw[] = [

@@ -14,6 +14,7 @@ alwaysApply: true
 - Use strict TypeScript configuration
 - Leverage TypeScript's built-in utility types
 - Use generics for reusable type patterns
+- Should be defined in appropiate location in the "src/types" folder
 
 ## Naming Conventions
 
@@ -63,3 +64,11 @@ alwaysApply: true
 - Use the Factory pattern for object creation
 - Leverage dependency injection
 - Use the Module pattern for encapsulation
+
+## ESlint
+
+- Make sure to follow the ESLint rules of the project. usually defined in "eslint.config.js"
+
+## Imports
+
+- Import should never be relative. Use the global "@" prefix to specify the location of the import.

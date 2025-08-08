@@ -88,6 +88,21 @@ const updateField = (key: string, value: unknown) => {
   }
 };
 
+// Safely read values for template bindings without TS syntax in templates
+const getFieldModelValue = (key: string): string | number | undefined => {
+  const value = props.data?.[key];
+  if (value === null || value === undefined) return undefined;
+  if (typeof value === 'string' || typeof value === 'number') return value;
+  return String(value);
+};
+
+const getSelectValue = (key: string): string | number | undefined => {
+  const value = props.data?.[key];
+  if (value === null || value === undefined) return undefined;
+  if (typeof value === 'string' || typeof value === 'number') return value;
+  return String(value);
+};
+
 const formatValue = (value: unknown, type?: string) => {
   if (value === null || value === undefined) return '-';
 
@@ -196,14 +211,14 @@ const formatValue = (value: unknown, type?: string) => {
                 <Label class="text-[10px] font-medium text-gray-500">{{ field.label }}</Label>
                 <Input
                   v-if="field.type === 'text'"
-                  :model-value="data[field.key] as string | number | undefined"
+                  :model-value="getFieldModelValue(field.key)"
                   :readonly="readonly"
                   class="h-8 text-xs"
                   @update:model-value="updateField(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'number'"
-                  :model-value="data[field.key] as string | number | undefined"
+                  :model-value="getFieldModelValue(field.key)"
                   :readonly="readonly"
                   type="number"
                   class="h-8 text-xs"
@@ -211,7 +226,7 @@ const formatValue = (value: unknown, type?: string) => {
                 />
                 <Input
                   v-else-if="field.type === 'date'"
-                  :model-value="data[field.key] as string | number | undefined"
+                  :model-value="getFieldModelValue(field.key)"
                   :readonly="readonly"
                   type="date"
                   class="h-8 text-xs"
@@ -219,7 +234,7 @@ const formatValue = (value: unknown, type?: string) => {
                 />
                 <Textarea
                   v-else-if="field.type === 'textarea'"
-                  :model-value="data[field.key] as string | number | undefined"
+                  :model-value="getFieldModelValue(field.key)"
                   :readonly="readonly"
                   rows="3"
                   class="text-xs resize-none"
@@ -227,7 +242,7 @@ const formatValue = (value: unknown, type?: string) => {
                 />
                 <Select
                   v-else-if="field.type === 'select'"
-                  :model-value="data[field.key] as any"
+                  :model-value="getSelectValue(field.key)"
                   :disabled="readonly"
                   @update:model-value="updateField(field.key, $event)"
                 >
