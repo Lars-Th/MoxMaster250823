@@ -183,7 +183,7 @@ const stats = computed(() => {
       label: 'Totalt antal användare',
       value: loginAccounts.value
         .filter(
-          (account: any) =>
+          (account: LoginAccount) =>
             account.status === 'Aktiv' || account.status === 'Inaktiv' || account.status === 'Låst'
         )
         .length.toString(),
@@ -300,7 +300,7 @@ function addUser() {
     role: newUser.value.role,
     status: newUser.value.status,
     lastLogin: 'Aldrig',
-    createdAt: new Date().toISOString().split('T')[0] || '',
+    createdAt: new Date().toISOString().split('T')[0] ?? '',
     department: newUser.value.department,
   };
 

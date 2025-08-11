@@ -1,5 +1,18 @@
 // Core business entity interfaces
-import type { DetailedPermissionGroup } from './enhanced';
+
+export interface DetailedPermissionGroup {
+  id: number;
+  name: string;
+  administreraInloggningskonton: boolean;
+  hanteraAnvandare: boolean;
+  laddaUppOchRedigera: boolean;
+  visaOchLaddaNer: boolean;
+  lasaPubliceradeNyheter: boolean;
+  publiceranyheter: boolean;
+  administreraKategorier: boolean;
+  redigeraVerksamheter: boolean;
+  skapaVerksamheter: boolean;
+}
 
 export interface LoginAccount {
   id: number;
@@ -32,4 +45,19 @@ export interface PermissionGroup {
   Permissions: string[];
   CreatedDate: string;
   UpdatedDate: string;
+}
+
+// Enhanced user types with relational data
+export interface UserWithPermissionGroup extends User {
+  permissionGroup?: DetailedPermissionGroup;
+}
+
+// Enhanced auth user type for authentication
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  stadsmission?: number;
+  permissionGroup?: DetailedPermissionGroup;
 }

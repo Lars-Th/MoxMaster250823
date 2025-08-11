@@ -38,14 +38,7 @@ import PasswordChangeDialog from '@/components/features/user/PasswordChangeDialo
 import ToastExample from '@/components/features/development/ToastExample.vue';
 
 // File tree structure
-interface TreeNode {
-  name: string;
-  path: string;
-  type: 'folder' | 'file';
-  children?: TreeNode[];
-  component?: any;
-  props?: any;
-}
+import type { TreeNode } from '@/types';
 
 const fileTree: TreeNode[] = [
   {
@@ -265,7 +258,7 @@ const fileTree: TreeNode[] = [
                 { key: 'active', label: 'Aktiva', value: 'active' },
                 { key: 'inactive', label: 'Inaktiva', value: 'inactive' },
               ],
-              onChange: (value: any) => console.log('Filter changed:', value),
+              onChange: (value: string) => console.log('Filter changed:', value),
             },
           ],
           data: [
@@ -348,7 +341,7 @@ const fileTree: TreeNode[] = [
                 { key: 'active', label: 'Aktiva', value: 'active' },
                 { key: 'inactive', label: 'Inaktiva', value: 'inactive' },
               ],
-              onChange: (value: any) => console.log('Status filter changed:', value),
+              onChange: (value: string) => console.log('Status filter changed:', value),
             },
             {
               modelValue: 'all',
@@ -359,7 +352,7 @@ const fileTree: TreeNode[] = [
                 { key: 'page', label: 'Sidor', value: 'page' },
                 { key: 'layout', label: 'Layout', value: 'layout' },
               ],
-              onChange: (value: any) => console.log('Type filter changed:', value),
+              onChange: (value: string) => console.log('Type filter changed:', value),
             },
           ],
           searchQuery: '',
@@ -901,7 +894,7 @@ const viewportStyles = computed(() => {
 });
 
 // Event handlers for ComplexDetailPage
-const handleFieldChange = (key: string, value: any) => {
+const handleFieldChange = (key: string, value: unknown) => {
   console.log('Field changed:', key, value);
   // In a real app, you would update the data here
   if (selectedComponent.value?.props?.data) {
@@ -934,17 +927,17 @@ const handleAddSubItem = (tableKey: string) => {
   // In a real app, you would add a new item to the specified table
 };
 
-const handleEditSubItem = (tableKey: string, item: any) => {
+const handleEditSubItem = (tableKey: string, item: Record<string, unknown>) => {
   console.log('Edit sub item from table:', tableKey, item);
   // In a real app, you would edit the specified item
 };
 
-const handleDeleteSubItem = (tableKey: string, item: any) => {
+const handleDeleteSubItem = (tableKey: string, item: Record<string, unknown>) => {
   console.log('Delete sub item from table:', tableKey, item);
   // In a real app, you would delete the specified item
 };
 
-const handleSubItemClick = (tableKey: string, item: any) => {
+const handleSubItemClick = (tableKey: string, item: Record<string, unknown>) => {
   console.log('Sub item clicked in table:', tableKey, item);
   // In a real app, you would handle the item click here
 };
@@ -990,25 +983,7 @@ const uiComponentCount = computed(() => {
 });
 
 // Spacing Variables Management with Algebraic Relationships
-interface SpacingVariable {
-  name: string;
-  variable: string;
-  baseValue: number; // The base mathematical relationship
-  computedValue: number; // Current computed value
-}
-
-type SpacingTarget = 'all' | 'margin' | 'padding' | 'gap';
-
-// Text Size Variables Management
-interface TextSizeVariable {
-  name: string;
-  variable: string;
-  baseValue: number; // The base mathematical relationship (in rem)
-  computedValue: number; // Current computed value
-  pixelValue: number; // Pixel equivalent for display
-}
-
-type TextSizeTarget = 'all' | 'text' | 'leading' | 'tracking';
+import type { SpacingTarget, SpacingVariable, TextSizeTarget, TextSizeVariable } from '@/types';
 
 // Base mathematical relationships for spacing (in rem)
 // These define the algebraic function: f(x) = baseValue * multiplier
@@ -1280,19 +1255,10 @@ const colorPairs = ref([
 ]);
 
 // Variable editor view selector
-type VariableEditorView = 'spacing' | 'text' | 'color';
+import type { ColorTarget, ColorVariable, VariableEditorView } from '@/types';
 const currentVariableEditor = ref<VariableEditorView>('spacing');
 
 // Color Variables Management
-interface ColorVariable {
-  name: string;
-  variable: string;
-  baseValue: string; // The base color value (hex, hsl, etc.)
-  computedValue: string; // Current computed value
-  category: 'primary' | 'secondary' | 'background' | 'accent' | 'destructive';
-}
-
-type ColorTarget = 'all' | 'primary' | 'secondary' | 'background' | 'accent' | 'destructive';
 
 // Usage examples for margins and paddings
 const marginExamples = [
@@ -1583,7 +1549,7 @@ onMounted(() => {
         { label: 'Utveckling', to: '/development' },
         { label: 'UI Byggstenar', isCurrentPage: true },
       ]"
-      :show-stats="true"
+      :show-stats
       :stats="[
         { label: 'Komponenter', value: componentCount, color: 'text-blue-600' },
         { label: 'Sidor', value: pageCount, color: 'text-green-600' },

@@ -6,20 +6,7 @@ import DataTable from '@/components/shared/DataTable.vue';
 import PaginationControls from '@/components/shared/PaginationControls.vue';
 import { Button } from '@/components/ui/button';
 
-interface ActionButton {
-  label: string;
-  icon?: any;
-  onClick: () => void;
-  variant?: 'primary' | 'secondary';
-  class?: string;
-}
-
-interface Filter {
-  modelValue: string;
-  placeholder: string;
-  options: { key: string; label: string; value: string }[];
-  onChange: (value: string) => void;
-}
+import type { ActionButton, Filter } from '@/types';
 
 interface Props {
   // Header props

@@ -1,6 +1,4 @@
-export interface PermissionConfig {
-  [routeName: string]: string[];
-}
+import type { PermissionConfig } from '@/types';
 
 // Map permission codes to role names
 export const permissionToRole: { [key: string]: string[] } = {

@@ -11,19 +11,6 @@ export interface UIBreadcrumbItem {
   isCurrentPage?: boolean;
 }
 
-export interface TableColumn<T = Record<string, unknown>> {
-  key: keyof T | string;
-  label: string;
-  sortable?: boolean;
-  width?: string;
-  align?: 'left' | 'center' | 'right';
-  type?: 'text' | 'badge' | 'actions' | 'custom';
-  class?: string;
-  render?: (value: unknown, row: T) => string | VNode;
-  format?: (value: unknown) => string;
-  badgeVariant?: (value: unknown) => string;
-}
-
 export interface UINavigationItem {
   label: string;
   path?: string;

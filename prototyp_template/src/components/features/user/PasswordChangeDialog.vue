@@ -77,16 +77,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Eye, EyeOff } from 'lucide-vue-next';
 
 // Types
-interface User {
-  id: string;
-  namn: string;
-  epost: string;
-}
-
-interface PasswordForm {
-  newPassword: string;
-  confirmPassword: string;
-}
+import type { User } from '@/types/entities';
+import type { PasswordForm } from '@/types/auth';
 
 // Props
 interface Props {

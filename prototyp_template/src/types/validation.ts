@@ -1,24 +1,57 @@
 // Vue-specific imports for types
 import type { Ref } from 'vue';
 
-// Validation-related interfaces
+// Validation types for consistent data validation across the application
+
+export interface ValidationSchema {
+  [fieldName: string]: {
+    rules: string[];
+    displayName: string;
+  };
+}
 
 export interface ValidationRule {
-  required?: boolean;
-  minLength?: number;
-  maxLength?: number;
-  min?: number;
-  max?: number;
-  pattern?: RegExp;
-  email?: boolean;
-  numeric?: boolean;
-  custom?: (value: unknown) => boolean | string;
+  type: string;
+  message?: string;
+  value?: unknown;
 }
 
 export interface ValidationResult {
   isValid: boolean;
-  message?: string;
-  errors?: string[];
+  errors: Record<string, string[]>;
+}
+
+export interface FormField {
+  name: string;
+  label: string;
+  type:
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'number'
+    | 'textarea'
+    | 'select'
+    | 'checkbox'
+    | 'radio'
+    | 'date';
+  value?: unknown;
+  required?: boolean;
+  placeholder?: string;
+  validation?: ValidationRule[];
+  options?: Array<{ value: string | number; label: string }>;
+  disabled?: boolean;
+  readonly?: boolean;
+}
+
+export interface FormConfig {
+  fields: FormField[];
+  submitLabel?: string;
+  cancelLabel?: string;
+  showCancel?: boolean;
+  onSubmit?: (data: Record<string, unknown>) => void | Promise<void>;
+  onCancel?: () => void;
+  loading?: boolean;
+  error?: string | null;
 }
 
 export interface UseValidationReturn {

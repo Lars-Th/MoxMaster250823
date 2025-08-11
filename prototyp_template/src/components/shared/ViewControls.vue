@@ -10,26 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-interface ActionButton {
-  label: string;
-  icon?: any;
-  onClick: () => void;
-  variant?: 'primary' | 'secondary';
-  class?: string;
-}
-
-interface FilterOption {
-  key: string;
-  label: string;
-  value: string;
-}
-
-interface Filter {
-  modelValue: string;
-  placeholder: string;
-  options: FilterOption[];
-  onChange: (value: string) => void;
-}
+import type { ActionButton, Filter, FilterOption } from '@/types';
 
 interface Props {
   // Action buttons (left side) - support both old and new prop names

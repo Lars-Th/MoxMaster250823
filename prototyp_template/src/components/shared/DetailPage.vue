@@ -17,19 +17,7 @@ import {
 } from '@/components/ui/combobox';
 import { ArrowLeft, Check, ChevronsUpDown, FileText, Info, Save, Undo2 } from 'lucide-vue-next';
 
-interface Field {
-  key: string;
-  label: string;
-  type: 'text' | 'textarea' | 'select' | 'date' | 'number';
-  options?: { value: string; label: string }[];
-}
-
-interface Stat {
-  label: string;
-  value: string | number;
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline';
-  color?: string;
-}
+import type { Field, Stat } from '@/types';
 
 interface Props {
   data: { [key: string]: unknown };

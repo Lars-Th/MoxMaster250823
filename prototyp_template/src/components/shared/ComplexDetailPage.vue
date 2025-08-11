@@ -16,35 +16,7 @@ import { ArrowLeft, Edit, FileText, Info, Plus, Save, Trash2, Undo2 } from 'luci
 import type { Component } from 'vue';
 import type { TableColumn } from '@/types/ui';
 
-interface Field {
-  key: string;
-  label: string;
-  type: 'text' | 'textarea' | 'select' | 'date' | 'number';
-  options?: { value: string; label: string }[];
-}
-
-interface SubTable {
-  key: string;
-  title: string;
-  icon?: Component;
-  data: Record<string, unknown>[];
-  columns: TableColumn<Record<string, unknown>>[];
-  allowAdd?: boolean;
-  allowEdit?: boolean;
-  allowDelete?: boolean;
-}
-
-interface BreadcrumbItem {
-  label: string;
-  to?: string;
-  isCurrentPage?: boolean;
-}
-
-interface StatItem {
-  label: string;
-  value: string | number;
-  color?: string;
-}
+import type { BreadcrumbItem, Field, StatItem, SubTable } from '@/types';
 
 interface Props {
   title: string;

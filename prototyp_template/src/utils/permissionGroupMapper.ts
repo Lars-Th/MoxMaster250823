@@ -30,7 +30,7 @@ export function mapPermissionGroup(pg: PermissionGroup): DetailedPermissionGroup
   (pg.Permissions || []).forEach(permissionLabel => {
     const key = permissionMap[permissionLabel];
     if (key) {
-      const baseKey = key as keyof typeof base;
+      const baseKey = key;
       base[baseKey] = true;
     }
   });

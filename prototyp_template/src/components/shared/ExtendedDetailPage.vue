@@ -15,19 +15,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, Save, Undo2 } from 'lucide-vue-next';
 
-interface Field {
-  key: string;
-  label: string;
-  type: 'text' | 'textarea' | 'select' | 'date' | 'number' | 'datetime-local';
-  options?: { value: string; label: string }[];
-  readonly?: boolean;
-}
-
-interface Tab {
-  key: string;
-  title: string;
-  icon?: any;
-}
+import type { Field, Tab } from '@/types';
 
 interface Props {
   data: { [key: string]: unknown };

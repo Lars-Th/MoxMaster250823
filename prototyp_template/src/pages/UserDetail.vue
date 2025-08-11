@@ -117,7 +117,7 @@ const createPassword = async () => {
     } else {
       showError(response.error?.message ?? 'Ett fel uppstod vid uppdatering av lösenord');
     }
-  } catch (error) {
+  } catch (_error) {
     showError('Ett oväntat fel uppstod vid uppdatering av lösenord');
   } finally {
     isUpdatingPassword.value = false;
@@ -154,7 +154,7 @@ const saveChanges = async () => {
       // Update local data immediately
       if (user.value) {
         // Use spread operator instead of Object.assign for better compatibility
-        user.value = { ...(user.value as object), ...response.data } as any;
+        user.value = { ...(user.value as object), ...response.data } as Record<string, unknown>;
       }
 
       // If this is "my account", also update the current user in auth
@@ -165,7 +165,7 @@ const saveChanges = async () => {
         try {
           const userString = JSON.stringify(currentUser.value);
           localStorage.setItem('currentUser', userString);
-        } catch (storageError) {
+        } catch (_storageError) {
           // Ignore localStorage errors in case it's not available
         }
       }
@@ -179,7 +179,7 @@ const saveChanges = async () => {
     } else {
       showError(response.error?.message ?? 'Ett fel uppstod vid sparande');
     }
-  } catch (error) {
+  } catch (_error) {
     showError('Ett oväntat fel uppstod vid sparande');
   } finally {
     isSaving.value = false;
@@ -285,7 +285,7 @@ onMounted(() => {
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Behörighetsgrupp</label>
           <Input
-            :value="(user as any)?.permissionGroup?.name ?? 'Laddar...'"
+            :value="(user as Record<string, unknown>)?.['permissionGroup']?.['name'] ?? 'Laddar...'"
             type="text"
             class="w-full bg-gray-100"
             readonly

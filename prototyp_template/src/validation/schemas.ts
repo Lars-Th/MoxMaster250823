@@ -39,12 +39,7 @@ export const loginValidationSchema = {
 };
 
 // Type-safe validation schema type
-export interface ValidationSchema {
-  [fieldName: string]: {
-    rules: string[];
-    displayName: string;
-  };
-}
+import type { ValidationSchema } from '@/types';
 
 // Helper function to validate nested object properties
 export const validateNestedProperty = (obj: Record<string, unknown>, path: string): unknown => {

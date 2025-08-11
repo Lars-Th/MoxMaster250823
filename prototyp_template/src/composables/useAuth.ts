@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/api';
-import type { AuthUser } from '@/types/enhanced';
+import { type AuthUser } from '@/types/entities';
 
 // Global state
 const currentUser = ref<AuthUser | null>(null);

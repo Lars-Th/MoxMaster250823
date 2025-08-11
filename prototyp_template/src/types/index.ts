@@ -1,54 +1,42 @@
-// Organized type re-exports
+// Main types index - organized exports for the entire application
 
-export * from './api';
-
-// Core entities
+// Core business entities
 export * from './entities';
+
+// API and data layer types
+export * from './api';
+export * from './api-parameters';
+
+// Enhanced functionality types
 export * from './enhanced';
 export * from './relationships';
 
-// API & Client
-
-// UI & Components
-export type {
-  TableColumn,
-  UIBreadcrumbItem,
-  UINavigationItem,
-  LoadingState,
-  UIFilterOption,
-  ToastType,
-  ToastVariant,
-  ToastPosition,
-  ToastAction,
-  Toast,
-  ToastOptions,
-  ToastConfig,
-  Notification,
-  NotificationOptions,
-  NotificationAction,
-} from './ui';
+// UI and component types
+export * from './ui';
+export * from './components';
 export * from './navigation';
+export * from './shared-components';
 
-// System & Configuration
+// Data display and interaction types
+export * from './table';
+export * from './validation';
+
+// Dashboard and widget types
+export * from './widgets';
+
+// Common utility types
+export * from './common';
+
+// System and configuration types
 export * from './system';
 
-// Auth & Permissions
+// Authentication and permission types
+export * from './auth';
 export * from './enums';
+export * from './permissions';
 
-// Composables
+// Design system types
+export * from './design-system';
+
+// Composable types
 export * from './composables';
-
-// API types are now defined in ./api and ./api-parameters and exported above
-export type {
-  ApiConfig,
-  ApiError,
-  ApiRequestOptions,
-  ApiResponse,
-  HttpMethod,
-  QueryParams,
-  CrudService,
-  FilterParams,
-  PaginatedResponse,
-  PaginationParams,
-  RequestParams,
-} from './api';

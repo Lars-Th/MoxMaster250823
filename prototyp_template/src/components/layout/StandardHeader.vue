@@ -2,14 +2,7 @@
 import { useRouter } from 'vue-router';
 import { ChevronRight } from 'lucide-vue-next';
 
-import type { UIBreadcrumbItem } from '@/types';
-
-interface Stat {
-  label: string;
-  value: string | number;
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline';
-  color?: string;
-}
+import type { Stat, UIBreadcrumbItem } from '@/types';
 
 interface Props {
   title: string;

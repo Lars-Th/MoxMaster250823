@@ -78,7 +78,7 @@ const visiblePages = computed(() => {
 });
 
 // Methods
-const updateItemsPerPage = (value: any) => {
+const updateItemsPerPage = (value: string | number) => {
   const newItemsPerPage = parseInt(String(value));
   itemsPerPageState.value = newItemsPerPage;
   emit('update:itemsPerPage', newItemsPerPage);
