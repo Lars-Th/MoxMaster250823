@@ -264,26 +264,23 @@ function normalizeComboboxValue(
         </slot>
       </div>
 
-      <!-- Sidebar Content (1/3 width) -->
+      <!-- Description Column (1/3 width) -->
       <div class="space-y-4">
-        <slot name="sidebar-content" :data="data" :readonly="readonly">
-          <!-- Default sidebar -->
+        <slot name="description">
           <div class="bg-background rounded-lg border p-4">
-            <h3
-              class="text-sm font-semibold mb-3 flex items-center gap-2 text-secondary-foreground"
-            >
+            <h3 class="text-sm font-semibold mb-3 flex items-center gap-2 text-secondary-foreground">
               <Info class="h-4 w-4" />
-              Information
+              Beskrivning
             </h3>
-
-            <div class="space-y-2">
-              <div v-for="field in sidebarFields" :key="field.key" class="space-y-1">
-                <Label class="label-xs text-secondary-foreground">
-                  {{ field.label }}
-                </Label>
-                <div class="text-xs text-secondary-foreground">
-                  {{ formatValue(data[field.key], field.type) }}
-                </div>
+            <div class="space-y-3">
+              <div class="rounded-md border p-3" v-for="(section, i) in (props as any).descriptionSections ?? []" :key="i">
+                <p v-if="section.title" class="text-xs font-medium mb-1 text-secondary-foreground">{{ section.title }}</p>
+                <p v-for="(p, j) in section.paragraphs" :key="j" class="text-xs text-secondary-foreground leading-relaxed">
+                  {{ p }}
+                </p>
+              </div>
+              <div v-if="!((props as any).descriptionSections ?? []).length" class="text-xs text-secondary-foreground">
+                Lägg till `descriptionSections`-prop på sidan för att visa förklarande avsnitt.
               </div>
             </div>
           </div>

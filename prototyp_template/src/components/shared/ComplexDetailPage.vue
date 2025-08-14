@@ -14,9 +14,22 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, Edit, FileText, Info, Plus, Save, Trash2, Undo2 } from 'lucide-vue-next';
 import type { Component } from 'vue';
-import type { TableColumn } from '@/types/ui';
 
 import type { BreadcrumbItem, Field, StatItem, SubTable } from '@/types';
+
+type LocalSubTable = SubTable & {
+  key?: string;
+  icon?: Component;
+  allowAdd?: boolean;
+  allowEdit?: boolean;
+  allowDelete?: boolean;
+  columns?: any[];
+};
+
+interface DescriptionSection {
+  title?: string;
+  paragraphs: string[];
+}
 
 interface Props {
   title: string;
@@ -28,7 +41,9 @@ interface Props {
   stats?: StatItem[];
   mainFields?: Field[];
   sidebarFields?: Field[];
-  subTables?: SubTable[];
+  subTables?: LocalSubTable[];
+  descriptionTitle?: string;
+  descriptionSections?: DescriptionSection[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -40,6 +55,8 @@ const props = withDefaults(defineProps<Props>(), {
   mainFields: () => [],
   sidebarFields: () => [],
   subTables: () => [],
+  descriptionTitle: 'Beskrivning',
+  descriptionSections: () => [],
 });
 
 const emit = defineEmits<{
@@ -222,11 +239,11 @@ const formatValue = (value: unknown, type?: string) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem
-                      v-for="option in field.options"
-                      :key="option.value"
-                      :value="option.value"
-                    >
+                <SelectItem
+                  v-for="option in field.options"
+                  :key="String(option.value)"
+                  :value="String(option.value)"
+                >
                       {{ option.label }}
                     </SelectItem>
                   </SelectContent>
@@ -252,7 +269,7 @@ const formatValue = (value: unknown, type?: string) => {
                 variant="primary"
                 size="sm"
                 class="h-6 text-xs"
-                @click="emit('add-sub-item', table.key)"
+                @click="emit('add-sub-item', String(table.key ?? 'sub'))"
               >
                 <Plus class="h-3 w-3 mr-1" />
                 Lägg till
@@ -263,10 +280,10 @@ const formatValue = (value: unknown, type?: string) => {
           <div>
             <DataTable
               :data="table.data || []"
-              :columns="table.columns"
+              :columns="(table.columns as any[]) || []"
               :loading="false"
               class="text-xs border-0"
-              @row-click="row => emit('sub-item-click', table.key, row)"
+              @row-click="row => emit('sub-item-click', String(table.key ?? 'sub'), row)"
             >
               <template #actions="{ row }">
                 <div class="flex items-center gap-0.5">
@@ -276,7 +293,7 @@ const formatValue = (value: unknown, type?: string) => {
                     size="sm"
                     title="Redigera"
                     class="h-6 w-6 p-0 text-gray-600 hover:text-gray-700 hover:bg-gray-50"
-                    @click="emit('edit-sub-item', table.key, row)"
+                    @click="emit('sub-item-click', String(table.key ?? 'sub'), row)"
                   >
                     <Edit class="h-3.5 w-3.5" />
                   </Button>
@@ -286,7 +303,7 @@ const formatValue = (value: unknown, type?: string) => {
                     size="sm"
                     title="Radera"
                     class="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                    @click="emit('delete-sub-item', table.key, row)"
+                    @click="emit('sub-item-click', String(table.key ?? 'sub'), row)"
                   >
                     <Trash2 class="h-3.5 w-3.5" />
                   </Button>
@@ -297,22 +314,21 @@ const formatValue = (value: unknown, type?: string) => {
         </div>
       </div>
 
-      <!-- Sidebar Content (1/3 width) -->
+      <!-- Description Column (1/3 width) -->
       <div class="space-y-4">
-        <slot name="sidebar-content" :data="data">
-          <!-- Default sidebar -->
+        <slot name="description">
           <div class="bg-white rounded-lg border p-4">
             <h3 class="text-sm font-semibold mb-3 flex items-center gap-2 text-gray-600">
               <Info class="h-4 w-4" />
-              Information
+              Beskrivning
             </h3>
-
-            <div class="space-y-2">
-              <div v-for="field in sidebarFields" :key="field.key" class="space-y-1">
-                <Label class="label-xs text-gray-500">{{ field.label }}</Label>
-                <div class="text-xs text-gray-700">
-                  {{ formatValue(data[field.key], field.type) }}
-                </div>
+            <div class="space-y-3">
+              <div class="rounded-md border p-3" v-for="(section, i) in (props as any).descriptionSections ?? []" :key="i">
+                <p v-if="section.title" class="text-xs font-medium mb-1 text-gray-600">{{ section.title }}</p>
+                <p v-for="(p, j) in section.paragraphs" :key="j" class="text-xs text-gray-700 leading-relaxed">{{ p }}</p>
+              </div>
+              <div v-if="!((props as any).descriptionSections ?? []).length" class="text-xs text-gray-600">
+                Lägg till `descriptionSections`-prop på sidan för att visa förklarande avsnitt.
               </div>
             </div>
           </div>
