@@ -47,7 +47,10 @@ Exemplen nedan visar hur du kan fylla i mallarna. De är avsedda att guida anvä
 - Använd `mainFields` för textfält. Om du behöver slot: importera `Input`/`Label` från shadcn/ui och använd `form-xs`/`label-xs`.
 - För logotyp: `Input type="file"` via shadcn `Input`-komponenten och uppdatera via composable.
 
-3) State
+3) Designparitet
+- Om du utgår från en redan designad sida i `@/pages/`, kontrollera att den följer `DetailPage.vue`/`ComplexDetailPage.vue`-mönstret. Avvikelser ska refaktoreras bort, inte dupliceras.
+
+4) State
 - Åtkomst till företagsinställningar sker via `useCompanySettings()` som hanterar `localStorage` säkert med guards.
 
 ---

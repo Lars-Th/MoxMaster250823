@@ -22,3 +22,4 @@ Håll tasks små, spårbara, och kopplade till krav-ID (REQ-###) och milstolpe.
 - UI matchar shared-mall och designregler (textstorlekar, höjder, states)
 - Sidor som använder `DetailPage.vue` använder shadcn-komponenter med `form-xs`/`label-xs` och inga råa `<input>`.
 - Lint och build passerar
+- Designparitet verifierad mot `ListPage.vue`, `DetailPage.vue` och `ComplexDetailPage.vue` (inkl. beskrivningskolumn, filterkontroller, knappriktlinjer).

@@ -28,6 +28,7 @@ Den här processen är avsedd att köras iterativt. Varje iteration ska lämna s
 
 - Bygg och kör lint. Validera UI manuellt och med tester där det är möjligt.
 - Bekräfta att endpoints svarar enligt `API_CONTRACT.md` (mock eller riktig backend).
+- Kör designparitet-check: jämför nya sidor mot shared-mallarna. Fältstorlekar, labels, filterkontroller, beskrivningskolumn och knappar ska överensstämma.
 
 ### 6. Dokumentera och leverera
 

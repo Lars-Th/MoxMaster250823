@@ -8,6 +8,7 @@ Praktiska, återanvändbara mönster för UI, dataflöden och arkitektur. Använ
 - Bygg sidor med shared-mallar:
   - Listvyer: `ListPage.vue` + `DataTable.vue` + `ViewControls.vue` + `PaginationControls.vue`
   - Detaljvyer: `DetailPage.vue` eller `ComplexDetailPage.vue`
+  - Om en sida i `@/pages/` används som referens, säkerställ att den själv följer dessa mallar. Annars refaktorera den först.
 
 #### 2) Lista + filter/sök/sort (obligatoriskt i listvyer)
 - UI: Placera filter/sök i `ViewControls.vue` eller över tabellen.
@@ -46,6 +47,15 @@ Praktiska, återanvändbara mönster för UI, dataflöden och arkitektur. Använ
 - Återanvänd standardrendering via `mainFields`/`sidebarFields` när det går.
 - Om `#main-content`-slot överstyr layouten, importera shadcn-komponenter (`Input`, `Select`, `Label`, `Textarea`) och applicera klasserna `form-xs` på inputs/selects och `label-xs` på labels.
 - Undvik att blanda egna element (`<input>`) med shadcn-styling — använd alltid shadcn-komponenterna för konsistens.
+
+#### 12) ListPage och filter
+- Använd `ViewControls` för sök/filters/åtgärder. Bindningar sker med `@update:modelValue` (camelCase).
+- Select/Input i kontrollerna ska spegla lokalt UI-tillstånd för omedelbar återkoppling och samtidigt emit:a uppåt.
+- `DataTable` använder `text-xs`; actions och paginering följer knappriktlinjer.
+
+#### 13) Beskrivningskolumn i detaljsidor
+- Rubrik: “Beskrivning”. Innehåll: 1..N avsnitt med ram (`border`), rubrik `text-xs font-medium text-gray-600` och brödtext `text-xs text-gray-700`.
+- Passa in via `descriptionSections`-prop eller slot, men följ samma typografi.
 
 #### 9) Validering
 - Följ `src/validation/` och `src/types/validation.ts` mönster för schema eller regler.

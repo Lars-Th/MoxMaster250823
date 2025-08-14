@@ -75,3 +75,21 @@ const { settings } = useCompanySettings();
 3) Implementera kod enligt tjänstelager och typer. Skriv tester när det är möjligt.
 4) Uppdatera `PROJECT_PLAN.md` milstolpar om scope ändras.
 5) Lägg till/uppdatera tasks i `TASKS.md` med tydliga acceptance criteria.
+
+### 10. Designparitet och mönster (kritisk)
+
+- Vyer ska byggas med shared-mallarna: `ListPage.vue`, `DetailPage.vue`, `ComplexDetailPage.vue`. Återanvänd dem före egen markup.
+- Om en redan designad sida i `@/pages/` används som referens: kontrollera att den faktiskt följer shared-mallarna. Vid avvikelser — refaktorera till mönstret, duplicera inte speciallogik.
+- Formregler (gäller alla sidor, inklusive slot-override):
+  - Komponenter: shadcn/ui `Input`, `Select`, `Textarea`, `Label` (inga råa `<input>`)
+  - Storlekar: inputs/selects `form-xs` (inkl. `h-8 text-xs`), labels `label-xs`, knappar `h-8 text-xs` med `gap-2`
+  - Select och inputs använder alltid `v-model` eller `@update:modelValue` (camelCase)
+- ListPage:
+  - `ViewControls` för sök/filter; filters använder lokal spegling för omedelbar visuell uppdatering
+  - `DataTable` textstorlek `text-xs`; pagination och actions matchar knappriktlinjer
+- DetailPage/ComplexDetailPage:
+  - `mainFields`/`sidebarFields` för standardrendering; om slot används, importera shadcn-komponenter och använd samma klasser
+  - Beskrivningskolumn: rubrik “Beskrivning” + sektioner med inramade avsnitt och `text-xs`
+- Browser-API:
+  - Åtkomst till `localStorage`/`window` endast via composables (ex. `useCompanySettings`) med guards (`typeof window !== 'undefined'`)
+- Review/checklista måste passeras innan merge. Se `TASKS.md` acceptance och `PROCESS.md`.
