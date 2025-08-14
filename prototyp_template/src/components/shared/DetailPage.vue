@@ -55,6 +55,23 @@ const updateField = (key: string, value: any) => {
   }
 };
 
+// Local state to mirror props.data for immediate UI feedback (like ViewControls)
+import { ref, watch } from 'vue';
+const localData = ref<Record<string, unknown>>({ ...props.data });
+
+watch(
+  () => props.data,
+  (newData) => {
+    localData.value = { ...newData };
+  },
+  { deep: true }
+);
+
+const setLocalAndEmit = (key: string, value: unknown) => {
+  localData.value[key] = value;
+  updateField(key, value);
+};
+
 const formatValue = (value: any, type?: string) => {
   if (value === null || value === undefined) return '-';
 
@@ -76,7 +93,7 @@ const formatValue = (value: any, type?: string) => {
 
 // Helper for Select value
 const getSelectValue = (key: string): string | number | undefined => {
-  const value = props.data?.[key];
+  const value = localData.value?.[key];
   if (value === null || value === undefined) return undefined;
   if (typeof value === 'string' || typeof value === 'number') return value;
   return String(value);
@@ -155,40 +172,40 @@ const getSelectValue = (key: string): string | number | undefined => {
                 <Label class="label-xs">{{ field.label }}</Label>
                 <Input
                   v-if="field.type === 'text'"
-                  :model-value="(data[field.key] ?? '').toString()"
+                  :model-value="String(localData[field.key] ?? '')"
                   :readonly="readonly"
                   class="form-xs"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="setLocalAndEmit(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'number'"
-                  :model-value="Number(data[field.key] ?? 0)"
+                  :model-value="Number(localData[field.key] ?? 0)"
                   :readonly="readonly"
                   type="number"
                   class="form-xs"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="setLocalAndEmit(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'date'"
-                  :model-value="(data[field.key] ?? '').toString()"
+                  :model-value="String(localData[field.key] ?? '')"
                   :readonly="readonly"
                   type="date"
                   class="form-xs"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="setLocalAndEmit(field.key, $event)"
                 />
                 <Textarea
                   v-else-if="field.type === 'textarea'"
-                  :model-value="(data[field.key] ?? '').toString()"
+                  :model-value="String(localData[field.key] ?? '')"
                   :readonly="readonly"
                   rows="3"
                   class="text-xs resize-none"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="setLocalAndEmit(field.key, $event)"
                 />
                 <Select
                   v-else-if="field.type === 'select'"
                   :model-value="getSelectValue(field.key)"
                   :disabled="readonly"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="(v) => setLocalAndEmit(field.key, v)"
                 >
                   <SelectTrigger class="form-xs">
                     <SelectValue :placeholder="`Välj ${field.label.toLowerCase()}...`" />
@@ -214,18 +231,18 @@ const getSelectValue = (key: string): string | number | undefined => {
       <div class="space-y-4">
         <slot name="description">
           <div class="bg-background rounded-lg border p-4">
-            <h3 class="text-sm font-semibold mb-3 flex items-center gap-2 text-secondary-foreground">
+            <h3 class="text-sm font-semibold mb-3 flex items-center gap-2 text-gray-600">
               <Info class="h-4 w-4" />
               {{ props.descriptionTitle }}
             </h3>
             <div class="space-y-3">
               <div class="rounded-md border p-3" v-for="(section, i) in props.descriptionSections" :key="i">
-                <p v-if="section.title" class="text-xs font-medium mb-1 text-secondary-foreground">{{ section.title }}</p>
-                <p v-for="(p, j) in section.paragraphs" :key="j" class="text-xs text-secondary-foreground leading-relaxed">
+                <p v-if="section.title" class="text-xs font-medium mb-1 text-gray-600">{{ section.title }}</p>
+                <p v-for="(p, j) in section.paragraphs" :key="j" class="text-xs text-gray-700 leading-relaxed">
                   {{ p }}
                 </p>
               </div>
-              <div v-if="!props.descriptionSections.length" class="text-xs text-secondary-foreground">
+              <div v-if="!props.descriptionSections.length" class="text-xs text-gray-600">
                 Lägg till `descriptionSections`-prop på sidan för att visa förklarande avsnitt.
               </div>
             </div>

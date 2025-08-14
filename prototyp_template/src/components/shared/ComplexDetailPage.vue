@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import { ArrowLeft, Edit, FileText, Info, Plus, Save, Trash2, Undo2 } from 'lucide-vue-next';
 import type { Component } from 'vue';
+import { ref, watch } from 'vue';
 
 import type { BreadcrumbItem, Field, StatItem, SubTable } from '@/types';
 
@@ -77,16 +78,32 @@ const updateField = (key: string, value: unknown) => {
   }
 };
 
+// Local mirror of props.data for immediate UI feedback like in ViewControls/DetailPage
+const localData = ref<Record<string, unknown>>({ ...props.data });
+
+watch(
+  () => props.data,
+  (newData) => {
+    localData.value = { ...newData };
+  },
+  { deep: true }
+);
+
+const setLocalAndEmit = (key: string, value: unknown) => {
+  localData.value[key] = value;
+  updateField(key, value);
+};
+
 // Safely read values for template bindings without TS syntax in templates
 const getFieldModelValue = (key: string): string | number | undefined => {
-  const value = props.data?.[key];
+  const value = localData.value?.[key];
   if (value === null || value === undefined) return undefined;
   if (typeof value === 'string' || typeof value === 'number') return value;
   return String(value);
 };
 
 const getSelectValue = (key: string): string | number | undefined => {
-  const value = props.data?.[key];
+  const value = localData.value?.[key];
   if (value === null || value === undefined) return undefined;
   if (typeof value === 'string' || typeof value === 'number') return value;
   return String(value);
@@ -203,7 +220,7 @@ const formatValue = (value: unknown, type?: string) => {
                   :model-value="getFieldModelValue(field.key)"
                   :readonly="readonly"
                   class="form-xs"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="setLocalAndEmit(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'number'"
@@ -211,7 +228,7 @@ const formatValue = (value: unknown, type?: string) => {
                   :readonly="readonly"
                   type="number"
                   class="form-xs"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="setLocalAndEmit(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'date'"
@@ -219,7 +236,7 @@ const formatValue = (value: unknown, type?: string) => {
                   :readonly="readonly"
                   type="date"
                   class="form-xs"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="setLocalAndEmit(field.key, $event)"
                 />
                 <Textarea
                   v-else-if="field.type === 'textarea'"
@@ -227,13 +244,13 @@ const formatValue = (value: unknown, type?: string) => {
                   :readonly="readonly"
                   rows="3"
                   class="text-xs resize-none"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="setLocalAndEmit(field.key, $event)"
                 />
                 <Select
                   v-else-if="field.type === 'select'"
                   :model-value="getSelectValue(field.key)"
                   :disabled="readonly"
-                  @update:modelValue="updateField(field.key, $event)"
+                  @update:modelValue="(v) => setLocalAndEmit(field.key, v)"
                 >
                   <SelectTrigger size="sm" class="form-xs">
                     <SelectValue />
