@@ -3,8 +3,11 @@ import { ref } from 'vue';
 import DetailPage from '@/components/shared/DetailPage.vue';
 import companyDefaults from '@/assets/data/companySettings.json';
 import { useToast } from '@/composables/useToast';
+import { useCompanySettings } from '@/composables/useCompanySettings';
 
 const { success, error } = useToast();
+
+const { updateSettings, setLogoUrl } = useCompanySettings();
 
 const data = ref<Record<string, unknown>>({
   companyName: companyDefaults.companyName,
@@ -50,7 +53,17 @@ const handleFieldChange = (key: string, value: unknown) => {
 const handleSave = () => {
   try {
     // Placeholder: här skulle vi spara till backend eller localStorage
-    localStorage.setItem('companySettings', JSON.stringify(data.value));
+    updateSettings({
+      companyName: String(data.value.companyName ?? ''),
+      street: String(data.value.street ?? ''),
+      zip: String(data.value.zip ?? ''),
+      city: String(data.value.city ?? ''),
+      country: String(data.value.country ?? ''),
+      contactName: String(data.value.contactName ?? ''),
+      contactEmail: String(data.value.contactEmail ?? ''),
+      contactPhone: String(data.value.contactPhone ?? ''),
+      logoUrl: String(data.value.logoUrl ?? ''),
+    });
     success('Sparat', 'Företagsinställningarna har sparats.');
   } catch (e) {
     error('Fel', 'Kunde inte spara företagsinställningarna.');
@@ -68,12 +81,8 @@ const handleLogoChange = (event: Event) => {
   const reader = new FileReader();
   reader.onload = () => {
     data.value.logoUrl = reader.result as string;
+    setLogoUrl(String(data.value.logoUrl));
     success('Logotyp uppladdad', 'Förhandsvisas nu och används i sidomenyn.');
-    try {
-      const saved = localStorage.getItem('companySettings');
-      const parsed = saved ? JSON.parse(saved) : {};
-      localStorage.setItem('companySettings', JSON.stringify({ ...parsed, logoUrl: data.value.logoUrl }));
-    } catch {}
   };
   reader.readAsDataURL(file);
 };

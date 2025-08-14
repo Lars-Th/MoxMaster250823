@@ -49,6 +49,25 @@ Denna regelstruktur vägleder hur en AI (och teamet) konsekvent utvecklar nya pr
 - DRY: extrahera gemensam logik till composables, utils eller bas-klasser.
 - Lint-regler i `eslint.config.js` ska passera utan varningar.
 
+### 9. Säker åtkomst till webbläsar-API (kritisk)
+
+- All åtkomst till `window`, `localStorage`, `document` och andra webbläsar-API:n ska ske bakom skydd:
+  - Kontrollera `typeof window !== 'undefined'` innan användning.
+  - Extrahera logik till composables (ex. `useCompanySettings`) i stället för att göra anrop i templates.
+  - I templates, använd computed-värden från composables i stället för direkta funktionsanrop som kan kasta runtime-fel.
+  - Vid behov av initial data: ladda defaults från `src/assets/data/*.json` och slå samman med lagrade värden.
+
+Exempel:
+```ts
+// Bra
+const isBrowser = typeof window !== 'undefined';
+const val = isBrowser ? localStorage.getItem('key') : null;
+
+// Bättre: composable
+import { useCompanySettings } from '@/composables/useCompanySettings';
+const { settings } = useCompanySettings();
+```
+
 ### 8. Leverabler per steg (AI-ritualer)
 
 1) Uppdatera `REQUIREMENTS.md` (nya/ändrade krav) och länka ärenden.
