@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
+import { computed } from 'vue';
 import { bottomNavigationItems, mainNavigationItems } from '@/router';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -38,7 +39,7 @@ interface Props {
   } | null;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   logoSrc: '',
   logoAlt: 'Project Specific',
   currentUser: () => ({
@@ -139,6 +140,20 @@ const handleImageError = (event: Event) => {
     img.src = '/images/logo-placeholder.png';
   }
 };
+
+// Safe computed logo URL (guards SSR / non-browser contexts)
+const sidebarLogoUrl = computed(() => {
+  const fallback = props.logoSrc || '/images/logo-placeholder.png';
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return fallback;
+    const raw = window.localStorage.getItem('companySettings');
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw) as { logoUrl?: string } | null;
+    return parsed?.logoUrl || fallback;
+  } catch {
+    return fallback;
+  }
+});
 </script>
 
 <template>
@@ -146,7 +161,7 @@ const handleImageError = (event: Event) => {
     <!-- Sidebar Header -->
     <div class="p-4">
       <img
-        :src="(localStorage.getItem('companySettings') ? JSON.parse(localStorage.getItem('companySettings') || '{}')?.logoUrl : null) || logoSrc || '/images/logo-placeholder.png'"
+        :src="sidebarLogoUrl"
         :alt="logoAlt || 'Project Specific'"
         class="w-full h-auto max-h-24 object-contain"
         @error="handleImageError"
