@@ -65,5 +65,3 @@ export function useCompanySettings() {
 
   return { settings, updateSettings, logoUrl, setLogoUrl };
 }
-
-

@@ -4,6 +4,8 @@ import DetailPage from '@/components/shared/DetailPage.vue';
 import companyDefaults from '@/assets/data/companySettings.json';
 import { useToast } from '@/composables/useToast';
 import { useCompanySettings } from '@/composables/useCompanySettings';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const { success, error } = useToast();
 
@@ -103,11 +105,14 @@ const handleLogoChange = (event: Event) => {
       <template #main-content="{ data: d }">
         <div class="bg-background rounded-lg border p-4">
           <h3 class="text-sm font-semibold flex items-center text-foreground/80 mb-2 gap-2">Logotyp</h3>
-          <div class="flex items-center gap-4">
-            <img :src="(d.logoUrl as string)" alt="Logotyp" class="h-10 object-contain" />
-            <label class="text-xs font-medium">Ladda upp PNG:
-              <input type="file" accept="image/png" class="ml-2 text-xs" @change="handleLogoChange" />
-            </label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex items-center">
+              <img :src="(d.logoUrl as string)" alt="Logotyp" class="h-10 object-contain" />
+            </div>
+            <div class="space-y-1">
+              <Label for="company-logo" class="label-xs">Ladda upp PNG (med transparens)</Label>
+              <Input id="company-logo" type="file" accept="image/png" class="form-xs" @change="handleLogoChange" />
+            </div>
           </div>
         </div>
 
@@ -131,5 +136,3 @@ const handleLogoChange = (event: Event) => {
     </DetailPage>
   </div>
  </template>
-
-
