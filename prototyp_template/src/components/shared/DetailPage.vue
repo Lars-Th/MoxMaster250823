@@ -186,48 +186,48 @@ function normalizeComboboxValue(
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4">
               <div v-for="field in mainFields" :key="field.key" class="space-y-1">
-                <Label class="text-[10px] font-medium text-foreground/80">{{ field.label }}</Label>
+                <Label class="label-xs">{{ field.label }}</Label>
                 <Input
                   v-if="field.type === 'text'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :readonly="readonly"
-                  class="h-8 md:text-xs"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'number'"
                   :model-value="Number(data[field.key] ?? 0)"
                   :readonly="readonly"
                   type="number"
-                  class="h-8 text-xs"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'date'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :readonly="readonly"
                   type="date"
-                  class="h-8 text-xs"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Textarea
                   v-else-if="field.type === 'textarea'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :readonly="readonly"
                   rows="3"
-                  class="md:text-xs resize-none"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="text-xs resize-none"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Combobox
                   v-else-if="field.type === 'select'"
                   :model-value="getSelectedOption(field, data[field.key])"
                   :disabled="readonly"
                   by="value"
-                  @update:model-value="handleComboboxChange(field, normalizeComboboxValue($event))"
+                  @update:modelValue="handleComboboxChange(field, normalizeComboboxValue($event))"
                 >
                   <ComboboxAnchor as-child>
                     <ComboboxTrigger as-child>
-                      <Button variant="outline" class="font-normal text-xs">
+                      <Button variant="outline" class="font-normal text-xs h-8">
                         {{
                           getSelectedOption(field, data[field.key])?.label ?? 'Välj alternativ...'
                         }}
@@ -278,7 +278,7 @@ function normalizeComboboxValue(
 
             <div class="space-y-2">
               <div v-for="field in sidebarFields" :key="field.key" class="space-y-1">
-                <Label class="text-[10px] font-medium text-secondary-foreground">
+                <Label class="label-xs text-secondary-foreground">
                   {{ field.label }}
                 </Label>
                 <div class="text-xs text-secondary-foreground">

@@ -178,31 +178,31 @@ const formatValue = (value: unknown, type?: string) => {
               Grundläggande information
             </h3>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 p-2">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 p-2">
               <div v-for="field in mainFields" :key="field.key" class="space-y-1">
-                <Label class="text-[10px] font-medium text-gray-500">{{ field.label }}</Label>
+                <Label class="label-xs">{{ field.label }}</Label>
                 <Input
                   v-if="field.type === 'text'"
                   :model-value="getFieldModelValue(field.key)"
                   :readonly="readonly"
-                  class="h-8 text-xs"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'number'"
                   :model-value="getFieldModelValue(field.key)"
                   :readonly="readonly"
                   type="number"
-                  class="h-8 text-xs"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'date'"
                   :model-value="getFieldModelValue(field.key)"
                   :readonly="readonly"
                   type="date"
-                  class="h-8 text-xs"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Textarea
                   v-else-if="field.type === 'textarea'"
@@ -210,15 +210,15 @@ const formatValue = (value: unknown, type?: string) => {
                   :readonly="readonly"
                   rows="3"
                   class="text-xs resize-none"
-                  @update:model-value="updateField(field.key, $event)"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Select
                   v-else-if="field.type === 'select'"
                   :model-value="getSelectValue(field.key)"
                   :disabled="readonly"
-                  @update:model-value="updateField(field.key, $event)"
+                  @update:modelValue="updateField(field.key, $event)"
                 >
-                  <SelectTrigger size="sm" class="text-xs">
+                  <SelectTrigger size="sm" class="form-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -309,7 +309,7 @@ const formatValue = (value: unknown, type?: string) => {
 
             <div class="space-y-2">
               <div v-for="field in sidebarFields" :key="field.key" class="space-y-1">
-                <Label class="text-[10px] font-medium text-gray-500">{{ field.label }}</Label>
+                <Label class="label-xs text-gray-500">{{ field.label }}</Label>
                 <div class="text-xs text-gray-700">
                   {{ formatValue(data[field.key], field.type) }}
                 </div>

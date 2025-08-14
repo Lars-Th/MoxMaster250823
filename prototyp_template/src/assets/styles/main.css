@@ -351,3 +351,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+
+  /* Form size utility for consistent compact inputs/selects */
+  .form-xs {
+    @apply h-8 text-xs;
+  }
+
+  /* Label size utility using rem for consistency with design */
+  .label-xs {
+    font-size: 0.625rem;
+    /* 10px at 16px root */
+    line-height: 1rem;
+    /* match xs line-height rhythm */
+    @apply font-medium text-foreground/80;
+  }
+}

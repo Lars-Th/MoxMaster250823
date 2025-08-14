@@ -139,55 +139,55 @@ const formatValue = (value: any, type?: string) => {
         <slot name="main-content" :data="data" :readonly="readonly">
           <!-- Default form fields -->
           <div class="bg-white rounded-lg border p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div v-for="field in mainFields" :key="field.key" class="space-y-2">
-                <Label class="text-sm font-medium">{{ field.label }}</Label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div v-for="field in mainFields" :key="field.key" class="space-y-1">
+                <Label class="label-xs">{{ field.label }}</Label>
                 <Input
                   v-if="field.type === 'text'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :readonly="readonly || field.readonly"
-                  class="h-9"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'number'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :readonly="readonly || field.readonly"
                   type="number"
-                  class="h-9"
-                  @update:model-value="updateField(field.key, +$event || 0)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, +$event || 0)"
                 />
                 <Input
                   v-else-if="field.type === 'date'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :readonly="readonly || field.readonly"
                   type="date"
-                  class="h-9"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Input
                   v-else-if="field.type === 'datetime-local'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :readonly="readonly || field.readonly"
                   type="datetime-local"
-                  class="h-9"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="form-xs"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Textarea
                   v-else-if="field.type === 'textarea'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :readonly="readonly || field.readonly"
                   rows="3"
-                  class="resize-none"
-                  @update:model-value="updateField(field.key, $event)"
+                  class="text-xs resize-none"
+                  @update:modelValue="updateField(field.key, $event)"
                 />
                 <Select
                   v-else-if="field.type === 'select'"
                   :model-value="(data[field.key] ?? '').toString()"
                   :disabled="readonly || field.readonly"
-                  @update:model-value="updateField(field.key, $event)"
+                  @update:modelValue="updateField(field.key, $event)"
                 >
-                  <SelectTrigger class="h-9">
+                  <SelectTrigger class="form-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -213,7 +213,7 @@ const formatValue = (value: any, type?: string) => {
           <div class="bg-white rounded-lg border p-6">
             <div class="space-y-3">
               <div v-for="field in sidebarFields" :key="field.key" class="space-y-1">
-                <Label class="text-sm font-medium text-muted-foreground">{{ field.label }}</Label>
+                <Label class="label-xs text-muted-foreground">{{ field.label }}</Label>
                 <div class="text-sm">
                   {{ formatValue(data[field.key], field.type) }}
                 </div>

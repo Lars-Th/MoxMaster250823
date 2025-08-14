@@ -10,7 +10,8 @@ export * from '@/api/config';
 export * from '@/api/mocks';
 
 // Environment-based API service selection
-const USE_MOCK_API = import.meta.env['VITE_USE_MOCK_API'] === 'true';
+// Default to mock API (JSON) unless explicitly set to 'false'
+const USE_MOCK_API = (import.meta.env['VITE_USE_MOCK_API'] ?? 'true') === 'true';
 
 // Create the main API service instance
 const apiService = USE_MOCK_API ? new MockDataService() : new ApiConfiguration();
