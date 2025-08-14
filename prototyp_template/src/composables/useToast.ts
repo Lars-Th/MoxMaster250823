@@ -20,7 +20,7 @@ const defaultConfig: ToastConfig = {
     error: 'XCircle',
     warning: 'AlertTriangle',
     info: 'Info',
-    confirm: 'HelpCircle',
+    confirm: 'AlertTriangle',
   },
 };
 

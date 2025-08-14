@@ -37,7 +37,7 @@ const getToastClasses = (toast: ToastType): string => {
       'border-yellow-200 bg-yellow-50 text-yellow-800 dark:border-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     info: 'border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-800 dark:bg-blue-900 dark:text-blue-200',
     confirm:
-      'border-purple-200 bg-purple-50 text-purple-800 dark:border-purple-800 dark:bg-purple-900 dark:text-purple-200',
+      'border-yellow-200 bg-yellow-50 text-yellow-800 dark:border-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
   };
 
   return `${baseClasses} ${typeClasses[toast.type ?? 'info']}`;
@@ -50,7 +50,7 @@ const getIconClasses = (toast: ToastType): string => {
     error: 'bg-red-100 text-red-600 dark:bg-red-800 dark:text-red-200',
     warning: 'bg-yellow-100 text-yellow-600 dark:bg-yellow-800 dark:text-yellow-200',
     info: 'bg-blue-100 text-blue-600 dark:bg-blue-800 dark:text-blue-200',
-    confirm: 'bg-purple-100 text-purple-600 dark:bg-purple-800 dark:text-purple-200',
+    confirm: 'bg-yellow-100 text-yellow-600 dark:bg-yellow-800 dark:text-yellow-200',
   };
 
   return iconClasses[toast.type ?? 'info'];
@@ -86,7 +86,7 @@ const getActionClasses = (style?: string, toastType?: string): string => {
         case 'info':
           return 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700 focus:ring-blue-500';
         case 'confirm':
-          return 'bg-purple-600 text-white border-purple-600 hover:bg-purple-700 focus:ring-purple-500';
+          return 'bg-yellow-600 text-white border-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500';
         default:
           return 'bg-gray-600 text-white border-gray-600 hover:bg-gray-700 focus:ring-gray-500';
       }
@@ -103,7 +103,7 @@ const getActionClasses = (style?: string, toastType?: string): string => {
         case 'info':
           return 'border-blue-300 text-blue-700 hover:bg-blue-50 focus:ring-blue-500';
         case 'confirm':
-          return 'border-purple-300 text-purple-700 hover:bg-purple-50 focus:ring-purple-500';
+          return 'border-yellow-300 text-yellow-700 hover:bg-yellow-50 focus:ring-yellow-500';
         default:
           return 'border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500';
       }
