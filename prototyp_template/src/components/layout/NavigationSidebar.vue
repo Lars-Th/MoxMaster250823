@@ -59,6 +59,10 @@ const expandedMenuItems = ref<Set<string>>(new Set());
 
 const themes = [
   { name: 'Project Specific Theme', value: 'project-specific', class: 'theme_project-specific' },
+  { name: 'Gray', value: 'gray', class: 'theme_gray' },
+  { name: 'Orange', value: 'orange', class: 'theme_orange' },
+  { name: 'Green', value: 'green', class: 'theme_green' },
+  { name: 'Blue (Alt)', value: 'blue-alt', class: 'theme_blue-alt' },
   { name: 'Default', value: 'default', class: 'theme_default' },
   { name: 'Dark', value: 'dark', class: 'dark' },
 ];
@@ -289,7 +293,7 @@ const sidebarLogoUrl = computed(() => computedLogo.value || props.logoSrc || '/i
             <span class="flex-1 text-left">Themes</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" class="w-48">
+  <DropdownMenuContent align="start" class="w-56">
           <DropdownMenuLabel>Välj tema</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -298,22 +302,16 @@ const sidebarLogoUrl = computed(() => computedLogo.value || props.logoSrc || '/i
             class="cursor-pointer"
             @click="setTheme(theme)"
           >
-            <span class="flex items-center">
-              <span
-                class="w-3 h-3 rounded-full mr-2 border"
-                :class="{
-                  'border-gray-600': theme.value === 'project-specific',
-                  'bg-gray-100 border-gray-300': theme.value === 'default',
-                  'bg-gray-800 border-gray-600': theme.value === 'dark',
-                  'bg-fuchsia-500 border-fuchsia-600': theme.value === 'fuchsia',
-                  'bg-purple-500 border-purple-600': theme.value === 'purple',
-                  'bg-amber-500 border-amber-600': theme.value === 'amber',
-                  'bg-sky-500 border-sky-600': theme.value === 'sky',
-                  'bg-pink-500 border-pink-600': theme.value === 'pink',
-                }"
-                :style="theme.value === 'project-specific' ? { backgroundColor: '#0071ba' } : {}"
-              />
-              {{ theme.name }}
+            <span class="flex items-center gap-2">
+              <span class="w-4 h-4 rounded border" :class="{
+                'bg-[#0071ba] border-[#005d97]': theme.value === 'project-specific',
+                'bg-gray-100 border-gray-300': theme.value === 'gray' || theme.value === 'default',
+                'bg-orange-300 border-orange-400': theme.value === 'orange',
+                'bg-green-300 border-green-400': theme.value === 'green',
+                'bg-sky-300 border-sky-400': theme.value === 'blue-alt',
+                'bg-gray-800 border-gray-600': theme.value === 'dark',
+              }" />
+              <span>{{ theme.name }}</span>
               <span v-if="currentTheme === theme.value" class="ml-auto">✓</span>
             </span>
           </DropdownMenuItem>
