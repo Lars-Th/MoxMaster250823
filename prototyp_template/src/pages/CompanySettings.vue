@@ -119,7 +119,7 @@ const handleLogoChange = (event: Event) => {
               <Label class="label-xs">Ladda upp PNG (med transparens)</Label>
               <div class="flex items-center gap-2">
                 <input id="company-logo" ref="fileInputRef" type="file" accept="image/png" class="hidden" @change="handleLogoChange" />
-                <Button type="button" variant="secondary" size="sm" class="h-8 text-xs" @click="() => (fileInputRef as HTMLInputElement | null)?.click()">
+                <Button type="button" variant="default" size="sm" class="h-8 text-xs" @click="() => (fileInputRef as HTMLInputElement | null)?.click()">
                   <Upload class="h-4 w-4 mr-2" />
                   Välj fil
                 </Button>

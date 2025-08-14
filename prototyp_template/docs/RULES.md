@@ -93,3 +93,9 @@ const { settings } = useCompanySettings();
 - Browser-API:
   - Åtkomst till `localStorage`/`window` endast via composables (ex. `useCompanySettings`) med guards (`typeof window !== 'undefined'`)
 - Review/checklista måste passeras innan merge. Se `TASKS.md` acceptance och `PROCESS.md`.
+
+### 11. Temafärger (obligatoriskt)
+
+- Knapp-, länk- och accentfärger ska alltid komma från temats tokens (Tailwind-variabler: `bg-primary`, `text-primary-foreground`, `bg-secondary`, `bg-accent` etc.).
+- När nya knappar läggs till (t.ex. ikonknappar som “Välj fil”) använd `variant="default"` om primär handling och `variant="secondary"/"ghost"` för mindre viktiga handlingar, så de följer temat automagiskt.
+- Undvik hardkodade hex-färger i komponenter. Använd endast tokens.

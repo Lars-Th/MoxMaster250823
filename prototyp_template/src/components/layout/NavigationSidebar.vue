@@ -150,13 +150,15 @@ const sidebarLogoUrl = computed(() => computedLogo.value || props.logoSrc || '/i
 <template>
   <aside class="w-64 bg-card border-r border-border flex flex-col">
     <!-- Sidebar Header -->
-    <div class="p-4">
-      <img
-        :src="sidebarLogoUrl"
-        :alt="logoAlt || 'Project Specific'"
-        class="w-full h-auto max-h-24 object-contain"
-        @error="handleImageError"
-      />
+    <div class="p-3">
+      <div class="mx-auto w-28 h-14 flex items-center justify-center">
+        <img
+          :src="sidebarLogoUrl"
+          :alt="logoAlt || 'Project Specific'"
+          class="max-w-full max-h-full object-contain"
+          @error="handleImageError"
+        />
+      </div>
     </div>
 
     <!-- Main Navigation Section -->
