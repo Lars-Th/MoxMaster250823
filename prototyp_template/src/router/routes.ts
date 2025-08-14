@@ -7,6 +7,7 @@ const LoginForm = () => import('@/pages/LoginForm.vue');
 const UserList = () => import('@/pages/UserList.vue');
 const UserDetail = () => import('@/pages/UserDetail.vue');
 const PermissionGroups = () => import('@/pages/PermissionGroups.vue');
+const CompanySettings = () => import('@/pages/CompanySettings.vue');
 
 // Development
 const CustomComponents = () => import('@/pages/CustomComponents.vue');
@@ -48,6 +49,11 @@ export const settingsRoutes: RouteRecordRaw[] = [
     path: '/settings/permission-groups',
     name: 'settings-permission-groups',
     component: PermissionGroups,
+  },
+  {
+    path: '/settings/company-settings',
+    name: 'settings-company-settings',
+    component: CompanySettings,
   },
 ];
 

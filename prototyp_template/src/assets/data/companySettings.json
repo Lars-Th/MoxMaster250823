@@ -1,0 +1,16 @@
+{
+  "companyName": "Demo Företag AB",
+  "address": {
+    "street": "Exempelgatan 1",
+    "zip": "123 45",
+    "city": "Stockholm",
+    "country": "Sverige"
+  },
+  "contact": {
+    "name": "Huvudkontakt",
+    "email": "kontakt@demo.se",
+    "phone": "+46 8 123 45 67"
+  },
+  "logoUrl": "/images/logo-placeholder.png"
+}
+

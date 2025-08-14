@@ -146,7 +146,7 @@ const handleImageError = (event: Event) => {
     <!-- Sidebar Header -->
     <div class="p-4">
       <img
-        :src="logoSrc || '/images/logo-placeholder.png'"
+        :src="(localStorage.getItem('companySettings') ? JSON.parse(localStorage.getItem('companySettings') || '{}')?.logoUrl : null) || logoSrc || '/images/logo-placeholder.png'"
         :alt="logoAlt || 'Project Specific'"
         class="w-full h-auto max-h-24 object-contain"
         @error="handleImageError"

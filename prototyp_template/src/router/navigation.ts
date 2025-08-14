@@ -70,6 +70,12 @@ export const bottomNavigationItems: MainNavigationItem[] = [
             icon: Shield,
             permissions: ['A', 'SA'],
           },
+          {
+            name: 'Företagsinställningar',
+            path: '/settings/company-settings',
+            icon: Shield,
+            permissions: ['A', 'SA'],
+          },
         ],
       },
     ],
