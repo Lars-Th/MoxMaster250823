@@ -7,7 +7,7 @@ let toastId = 0;
 
 // Default configuration
 const defaultConfig: ToastConfig = {
-  position: 'top-right',
+  position: 'top-center',
   duration: 5000,
   maxToasts: 5,
   pauseOnHover: true,
