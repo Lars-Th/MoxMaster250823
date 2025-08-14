@@ -150,8 +150,8 @@ const sidebarLogoUrl = computed(() => computedLogo.value || props.logoSrc || '/i
 <template>
   <aside class="w-64 bg-card border-r border-border flex flex-col">
     <!-- Sidebar Header -->
-    <div class="p-3">
-      <div class="mx-auto w-28 h-14 flex items-center justify-center">
+    <div class="p-3 flex flex-col" style="min-height: 96px;">
+      <div class="mx-auto w-28 h-14 flex items-center justify-center flex-1">
         <img
           :src="sidebarLogoUrl"
           :alt="logoAlt || 'Project Specific'"

@@ -116,7 +116,6 @@ const handleLogoChange = (event: Event) => {
               <img :src="(d.logoUrl as string)" alt="Logotyp" class="h-10 object-contain" />
             </div>
             <div class="space-y-1">
-              <Label class="label-xs">Ladda upp PNG (med transparens)</Label>
               <div class="flex items-center gap-2">
                 <input id="company-logo" ref="fileInputRef" type="file" accept="image/png" class="hidden" @change="handleLogoChange" />
                 <Button type="button" variant="default" size="sm" class="h-8 text-xs" @click="() => (fileInputRef as HTMLInputElement | null)?.click()">
