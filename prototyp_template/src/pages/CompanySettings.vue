@@ -6,10 +6,13 @@ import { useToast } from '@/composables/useToast';
 import { useCompanySettings } from '@/composables/useCompanySettings';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Upload } from 'lucide-vue-next';
 
 const { success, error } = useToast();
 
 const { updateSettings, setLogoUrl } = useCompanySettings();
+const fileInputRef = ref<HTMLInputElement | null>(null);
 
 const data = ref<Record<string, unknown>>({
   companyName: companyDefaults.companyName,
@@ -72,6 +75,8 @@ const handleSave = () => {
   }
 };
 
+const fileName = ref<string>('');
+
 const handleLogoChange = (event: Event) => {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
@@ -80,6 +85,7 @@ const handleLogoChange = (event: Event) => {
     error('Ogiltig fil', 'Logotyp måste vara en PNG med transparens.');
     return;
   }
+  fileName.value = file.name;
   const reader = new FileReader();
   reader.onload = () => {
     data.value.logoUrl = reader.result as string;
@@ -110,8 +116,15 @@ const handleLogoChange = (event: Event) => {
               <img :src="(d.logoUrl as string)" alt="Logotyp" class="h-10 object-contain" />
             </div>
             <div class="space-y-1">
-              <Label for="company-logo" class="label-xs">Ladda upp PNG (med transparens)</Label>
-              <Input id="company-logo" type="file" accept="image/png" class="form-xs" @change="handleLogoChange" />
+              <Label class="label-xs">Ladda upp PNG (med transparens)</Label>
+              <div class="flex items-center gap-2">
+                <input id="company-logo" ref="fileInputRef" type="file" accept="image/png" class="hidden" @change="handleLogoChange" />
+                <Button type="button" variant="secondary" size="sm" class="h-8 text-xs" @click="() => (fileInputRef as HTMLInputElement | null)?.click()">
+                  <Upload class="h-4 w-4 mr-2" />
+                  Välj fil
+                </Button>
+                <span class="text-xs text-foreground/70" v-if="fileName">{{ fileName }}</span>
+              </div>
             </div>
           </div>
         </div>
