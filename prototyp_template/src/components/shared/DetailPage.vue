@@ -5,17 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
-  Combobox,
-  ComboboxAnchor,
-  ComboboxEmpty,
-  ComboboxGroup,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxItemIndicator,
-  ComboboxList,
-  ComboboxTrigger,
-} from '@/components/ui/combobox';
-import { ArrowLeft, Check, ChevronsUpDown, FileText, Info, Save, Undo2 } from 'lucide-vue-next';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ArrowLeft, FileText, Info, Save, Undo2 } from 'lucide-vue-next';
 
 import type { Field, Stat } from '@/types';
 
@@ -29,6 +25,8 @@ interface Props {
   breadcrumbs?: Array<{ label: string; to: string; isCurrentPage?: boolean }>;
   showStats?: boolean;
   stats?: Stat[];
+  descriptionTitle?: string;
+  descriptionSections?: Array<{ title?: string; paragraphs: string[] }>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -40,6 +38,8 @@ const props = withDefaults(defineProps<Props>(), {
   breadcrumbs: () => [],
   showStats: false,
   stats: () => [],
+  descriptionTitle: 'Beskrivning',
+  descriptionSections: () => [],
 });
 
 const emit = defineEmits<{
@@ -74,47 +74,13 @@ const formatValue = (value: any, type?: string) => {
   }
 };
 
-// Helper function to get selected option for combobox
-const getSelectedOption = (field: Field, value: any) => {
-  if (!field.options || !value) return null;
-  const stringValue = value?.toString() || '';
-  return (
-    field.options.find(
-      (option: { value: string; label: string }) => option.value === stringValue
-    ) || null
-  );
+// Helper for Select value
+const getSelectValue = (key: string): string | number | undefined => {
+  const value = props.data?.[key];
+  if (value === null || value === undefined) return undefined;
+  if (typeof value === 'string' || typeof value === 'number') return value;
+  return String(value);
 };
-
-// Helper function to handle combobox selection
-const handleComboboxChange = (
-  field: Field,
-  selectedOption: { value: string; label: string } | string | number | bigint | null
-) => {
-  let value = '';
-  if (selectedOption && typeof selectedOption === 'object' && 'value' in selectedOption) {
-    value = selectedOption.value;
-  } else if (
-    typeof selectedOption === 'string' ||
-    typeof selectedOption === 'number' ||
-    typeof selectedOption === 'bigint'
-  ) {
-    value = selectedOption.toString();
-  }
-  updateField(field.key, value);
-};
-
-// Normalize combobox value to ensure only valid types are passed to the handler
-function normalizeComboboxValue(
-  val: unknown
-): string | number | bigint | { value: string; label: string } | null {
-  if (val && typeof val === 'object' && 'value' in val && 'label' in val) {
-    return val as { value: string; label: string };
-  }
-  if (typeof val === 'string' || typeof val === 'number' || typeof val === 'bigint') {
-    return val;
-  }
-  return null;
-}
 </script>
 
 <template>
@@ -218,46 +184,26 @@ function normalizeComboboxValue(
                   class="text-xs resize-none"
                   @update:modelValue="updateField(field.key, $event)"
                 />
-                <Combobox
+                <Select
                   v-else-if="field.type === 'select'"
-                  :model-value="getSelectedOption(field, data[field.key])"
+                  :model-value="getSelectValue(field.key)"
                   :disabled="readonly"
-                  by="value"
-                  @update:modelValue="handleComboboxChange(field, normalizeComboboxValue($event))"
+                  @update:modelValue="updateField(field.key, $event)"
                 >
-                  <ComboboxAnchor as-child>
-                    <ComboboxTrigger as-child>
-                      <Button variant="outline" class="font-normal text-xs h-8">
-                        {{
-                          getSelectedOption(field, data[field.key])?.label ?? 'Välj alternativ...'
-                        }}
-                        <ChevronsUpDown class="" />
-                      </Button>
-                    </ComboboxTrigger>
-                  </ComboboxAnchor>
-
-                  <ComboboxList class="">
-                    <div class="">
-                      <ComboboxInput :placeholder="`Sök ${field.label.toLowerCase()}...`" />
-                    </div>
-
-                    <ComboboxEmpty class="text-xs">Inga alternativ hittades.</ComboboxEmpty>
-
-                    <ComboboxGroup>
-                      <ComboboxItem
-                        v-for="option in field.options"
-                        :key="option.value"
-                        :value="option"
-                        class="text-xs"
-                      >
-                        {{ option.label }}
-                        <ComboboxItemIndicator>
-                          <Check class="" />
-                        </ComboboxItemIndicator>
-                      </ComboboxItem>
-                    </ComboboxGroup>
-                  </ComboboxList>
-                </Combobox>
+                  <SelectTrigger class="form-xs">
+                    <SelectValue :placeholder="`Välj ${field.label.toLowerCase()}...`" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem
+                      v-for="option in field.options"
+                      :key="String(option.value)"
+                      :value="String(option.value)"
+                      class="text-xs"
+                    >
+                      {{ option.label }}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
@@ -270,16 +216,16 @@ function normalizeComboboxValue(
           <div class="bg-background rounded-lg border p-4">
             <h3 class="text-sm font-semibold mb-3 flex items-center gap-2 text-secondary-foreground">
               <Info class="h-4 w-4" />
-              Beskrivning
+              {{ props.descriptionTitle }}
             </h3>
             <div class="space-y-3">
-              <div class="rounded-md border p-3" v-for="(section, i) in (props as any).descriptionSections ?? []" :key="i">
+              <div class="rounded-md border p-3" v-for="(section, i) in props.descriptionSections" :key="i">
                 <p v-if="section.title" class="text-xs font-medium mb-1 text-secondary-foreground">{{ section.title }}</p>
                 <p v-for="(p, j) in section.paragraphs" :key="j" class="text-xs text-secondary-foreground leading-relaxed">
                   {{ p }}
                 </p>
               </div>
-              <div v-if="!((props as any).descriptionSections ?? []).length" class="text-xs text-secondary-foreground">
+              <div v-if="!props.descriptionSections.length" class="text-xs text-secondary-foreground">
                 Lägg till `descriptionSections`-prop på sidan för att visa förklarande avsnitt.
               </div>
             </div>

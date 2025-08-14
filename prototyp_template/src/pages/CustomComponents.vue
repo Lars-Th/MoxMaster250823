@@ -25,7 +25,7 @@ import DataTable from '@/components/shared/DataTable.vue';
 import ViewControls from '@/components/shared/ViewControls.vue';
 import DetailPage from '@/components/shared/DetailPage.vue';
 import ComplexDetailPage from '@/components/shared/ComplexDetailPage.vue';
-import ExtendedDetailPage from '@/components/shared/ExtendedDetailPage.vue';
+// ExtendedDetailPage removed
 import ListPage from '@/components/shared/ListPage.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import ErrorBoundary from '@/components/common/ErrorBoundary.vue';
@@ -38,9 +38,17 @@ import PasswordChangeDialog from '@/components/features/user/PasswordChangeDialo
 import ToastExample from '@/components/features/development/ToastExample.vue';
 
 // File tree structure
-import type { TreeNode } from '@/types';
+// Local demo types used by this showcase page
+interface DemoTreeNode {
+  name: string;
+  path: string;
+  type: 'file' | 'folder';
+  component?: any;
+  props?: Record<string, unknown>;
+  children?: DemoTreeNode[];
+}
 
-const fileTree: TreeNode[] = [
+const fileTree: DemoTreeNode[] = [
   {
     name: 'pages',
     path: 'pages',
@@ -629,11 +637,12 @@ const fileTree: TreeNode[] = [
         },
       },
 
+      /*
       {
         name: 'ExtendedDetailPage.vue',
         path: 'shared/ExtendedDetailPage.vue',
         type: 'file',
-        component: ExtendedDetailPage,
+        component: undefined,
         props: {
           title: 'Extended Demo Sida',
           description: 'En demonstration av ExtendedDetailPage-komponenten med flikar',
@@ -821,13 +830,14 @@ const fileTree: TreeNode[] = [
           hasUnsavedChanges: true,
         },
       },
+      */
     ],
   },
 ];
 
 // State
 const expandedFolders = ref(new Set(['pages', 'features', 'shared']));
-const selectedComponent = shallowRef<TreeNode | null>(null);
+const selectedComponent = shallowRef<DemoTreeNode | null>(null);
 
 // Viewport state
 type ViewportType = 'desktop' | 'laptop' | 'phone';
@@ -851,7 +861,7 @@ const toggleFolder = (path: string) => {
   }
 };
 
-const selectComponent = (node: TreeNode) => {
+const selectComponent = (node: DemoTreeNode) => {
   if (node.type === 'file' && node.component) {
     selectedComponent.value = node;
   }
@@ -896,9 +906,9 @@ const viewportStyles = computed(() => {
 // Event handlers for ComplexDetailPage
 const handleFieldChange = (key: string, value: unknown) => {
   console.log('Field changed:', key, value);
-  // In a real app, you would update the data here
-  if (selectedComponent.value?.props?.data) {
-    selectedComponent.value.props.data[key] = value;
+  const propsObj = (selectedComponent.value?.props as any) || null;
+  if (propsObj && propsObj['data']) {
+    propsObj['data'][key] = value as never;
   }
 };
 
@@ -946,7 +956,7 @@ const handleSubItemClick = (tableKey: string, item: Record<string, unknown>) => 
 const componentCount = computed(() => {
   if (!fileTree || !Array.isArray(fileTree)) return 0;
   let count = 0;
-  const countComponents = (nodes: TreeNode[]) => {
+  const countComponents = (nodes: DemoTreeNode[]) => {
     nodes.forEach(node => {
       if (node.type === 'file') {
         count++;
@@ -969,7 +979,7 @@ const uiComponentCount = computed(() => {
   if (!fileTree || !Array.isArray(fileTree)) return 0;
   const uiNodes = fileTree.filter(node => node.name !== 'pages');
   let count = 0;
-  const countComponents = (nodes: TreeNode[]) => {
+  const countComponents = (nodes: DemoTreeNode[]) => {
     nodes.forEach(node => {
       if (node.type === 'file') {
         count++;
@@ -983,11 +993,11 @@ const uiComponentCount = computed(() => {
 });
 
 // Spacing Variables Management with Algebraic Relationships
-import type { SpacingTarget, SpacingVariable, TextSizeTarget, TextSizeVariable } from '@/types';
+import type { SpacingTarget, TextSizeTarget } from '@/types';
 
 // Base mathematical relationships for spacing (in rem)
 // These define the algebraic function: f(x) = baseValue * multiplier
-const spacingVariables = ref<SpacingVariable[]>([
+const spacingVariables = ref([
   { name: 'Space 0', variable: '--space-0', baseValue: 0, computedValue: 0 },
   { name: 'Space 1', variable: '--space-1', baseValue: 0.25, computedValue: 0.25 },
   { name: 'Space 2', variable: '--space-2', baseValue: 0.5, computedValue: 0.5 },
@@ -1007,7 +1017,7 @@ const spacingVariables = ref<SpacingVariable[]>([
 const spacingMultiplier = ref<number>(1);
 
 // Text size variables with base mathematical relationships (in rem)
-const textSizeVariables = ref<TextSizeVariable[]>([
+const textSizeVariables = ref([
   { name: 'Text XS', variable: '--text-xs', baseValue: 0.75, computedValue: 0.75, pixelValue: 12 },
   {
     name: 'Text SM',
@@ -1549,13 +1559,6 @@ onMounted(() => {
         { label: 'Utveckling', to: '/development' },
         { label: 'UI Byggstenar', isCurrentPage: true },
       ]"
-      :show-stats
-      :stats="[
-        { label: 'Komponenter', value: componentCount, color: 'text-blue-600' },
-        { label: 'Sidor', value: pageCount, color: 'text-green-600' },
-        { label: 'UI Bibliotek', value: uiComponentCount, color: 'text-purple-600' },
-        { label: 'Viewports', value: 3, color: 'text-orange-600' },
-      ]"
     />
 
     <div class="pb-6">
@@ -1889,7 +1892,8 @@ onMounted(() => {
                 <!-- Special handling for DataTable to show action buttons -->
                 <DataTable
                   v-if="selectedComponent.name === 'DataTable.vue'"
-                  v-bind="selectedComponent.props || {}"
+                  :data="(selectedComponent.props?.data as Record<string, unknown>[] || [])"
+                  :columns="(selectedComponent.props?.columns as any[] || [])"
                 >
                   <template #row-actions="{ row }">
                     <div class="flex items-center gap-0.5">
@@ -1942,7 +1946,17 @@ onMounted(() => {
                 <!-- Special handling for ComplexDetailPage to enable field editing -->
                 <ComplexDetailPage
                   v-else-if="selectedComponent.name === 'ComplexDetailPage.vue'"
-                  v-bind="selectedComponent.props || {}"
+                  :title="String(selectedComponent.props?.title ?? 'Komplex Demo Sida')"
+                  :data="(selectedComponent.props?.data as Record<string, unknown> || {})"
+                  :breadcrumbs="(selectedComponent.props?.breadcrumbs as any[] || [])"
+                  :show-stats="Boolean(selectedComponent.props?.showStats)"
+                  :stats="(selectedComponent.props?.stats as any[] || [])"
+                  :main-fields="(selectedComponent.props?.mainFields as any[] || [])"
+                  :sidebar-fields="(selectedComponent.props?.sidebarFields as any[] || [])"
+                  :sub-tables="(selectedComponent.props?.subTables as any[] || [])"
+                  :description-sections="(selectedComponent.props?.descriptionSections as any[] || [])"
+                  :readonly="Boolean(selectedComponent.props?.readonly)"
+                  :has-unsaved-changes="Boolean(selectedComponent.props?.hasUnsavedChanges)"
                   @field-change="handleFieldChange"
                   @save="handleSave"
                   @delete="handleDelete"
@@ -1957,7 +1971,21 @@ onMounted(() => {
                 <!-- Special handling for ListPage to show custom slots -->
                 <ListPage
                   v-else-if="selectedComponent.name === 'ListPage.vue'"
-                  v-bind="selectedComponent.props || {}"
+                  :title="String(selectedComponent.props?.title ?? 'Lista')"
+                  :description="String(selectedComponent.props?.description ?? '')"
+                  :breadcrumbs="(selectedComponent.props?.breadcrumbs as any[] || [])"
+                  :show-stats="Boolean(selectedComponent.props?.showStats)"
+                  :stats="(selectedComponent.props?.stats as any[] || [])"
+                  :search-query="String(selectedComponent.props?.searchQuery ?? '')"
+                  :search-placeholder="String(selectedComponent.props?.searchPlaceholder ?? '')"
+                  :add-actions="(selectedComponent.props?.addActions as any[] || [])"
+                  :filters="(selectedComponent.props?.filters as any[] || [])"
+                  :data="(selectedComponent.props?.data as any[] || [])"
+                  :columns="(selectedComponent.props?.columns as any[] || [])"
+                  :total-items="Number(selectedComponent.props?.totalItems ?? 0)"
+                  :current-page="Number(selectedComponent.props?.currentPage ?? 1)"
+                  :items-per-page="Number(selectedComponent.props?.itemsPerPage ?? 10)"
+                  :loading="Boolean(selectedComponent.props?.loading)"
                 >
                   <template #cell-status="{ row }">
                     <span
