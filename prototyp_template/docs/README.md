@@ -27,6 +27,7 @@ Denna template är byggd för snabb prototypframtagning där frontenden drivs av
 2) Säkerställ att tjänster i `src/api/services/` använder REST-endpoints som kan mappas 1:1 mot backend.
 3) Sätt `VITE_API_BASE_URL` och peka `HttpClient` mot backend när det är redo.
 4) Ersätt/mocka data via `src/api/mocks/` vid behov under utveckling.
+5) För klientpersistens (t.ex. företagsinställningar/logo) använd en composable som `useCompanySettings` istället för direkt `localStorage`-åtkomst. Följ guard-regler i `RULES.md`.
 
 ### Komma igång med en ny prototyp (exempel: kundregister)
 

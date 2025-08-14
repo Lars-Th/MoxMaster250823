@@ -7,7 +7,7 @@ Praktiska, återanvändbara mönster för UI, dataflöden och arkitektur. Använ
 - Vänster navigation via `NavigationSidebar` (hanteras i `App.vue`).
 - Bygg sidor med shared-mallar:
   - Listvyer: `ListPage.vue` + `DataTable.vue` + `ViewControls.vue` + `PaginationControls.vue`
-  - Detaljvyer: `DetailPage.vue` eller `ExtendedDetailPage.vue` eller `ComplexDetailPage.vue`
+  - Detaljvyer: `DetailPage.vue` eller `ComplexDetailPage.vue`
 
 #### 2) Lista + filter/sök/sort (obligatoriskt i listvyer)
 - UI: Placera filter/sök i `ViewControls.vue` eller över tabellen.
@@ -41,6 +41,11 @@ Praktiska, återanvändbara mönster för UI, dataflöden och arkitektur. Använ
 
 #### 8) Typografi och storlekar
 - Följ regler i `RULES.md` (text-xs i tabeller, text-sm för knappar, labels i `text-[10px]`, inputs `h-8`).
+
+#### 11) Formulär i sidor som använder `DetailPage.vue`
+- Återanvänd standardrendering via `mainFields`/`sidebarFields` när det går.
+- Om `#main-content`-slot överstyr layouten, importera shadcn-komponenter (`Input`, `Select`, `Label`, `Textarea`) och applicera klasserna `form-xs` på inputs/selects och `label-xs` på labels.
+- Undvik att blanda egna element (`<input>`) med shadcn-styling — använd alltid shadcn-komponenterna för konsistens.
 
 #### 9) Validering
 - Följ `src/validation/` och `src/types/validation.ts` mönster för schema eller regler.

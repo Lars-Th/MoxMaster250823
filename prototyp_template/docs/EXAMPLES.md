@@ -37,6 +37,21 @@ Exemplen nedan visar hur du kan fylla i mallarna. De är avsedda att guida anvä
 
 ---
 
+### Exempel – Företagsinställningar
+
+1) Typer och data
+- Lägg `CompanySettings` i `src/types/entities.ts` (eller närliggande) och en JSON i `src/assets/data/companySettings.json`.
+
+2) UI
+- Skapa `CompanySettings.vue` under `@/pages/` och basera på `DetailPage.vue`.
+- Använd `mainFields` för textfält. Om du behöver slot: importera `Input`/`Label` från shadcn/ui och använd `form-xs`/`label-xs`.
+- För logotyp: `Input type="file"` via shadcn `Input`-komponenten och uppdatera via composable.
+
+3) State
+- Åtkomst till företagsinställningar sker via `useCompanySettings()` som hanterar `localStorage` säkert med guards.
+
+---
+
 ### Kravspec – exempel: kundregister (utkast att granska)
 
 0. Sammanfattning

@@ -22,6 +22,7 @@ Den här processen är avsedd att köras iterativt. Varje iteration ska lämna s
 - Skapa/uppdatera tjänster i `src/api/services/` (följ `BaseService<T>`-mönstret).
 - Använd composables i `src/composables/` för dataflöde och status.
 - Bygg UI med shadcn/ui + shared-komponenter. Följ typografi och höjdregler.
+- Säkerställ att sidor som baseras på `DetailPage.vue` återanvänder dess rendering eller importerar shadcn-komponenter med `form-xs`/`label-xs`. Direkt åtkomst till `window`/`localStorage` ska ske via composables med guards.
 
 ### 5. Verifiera
 

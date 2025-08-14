@@ -6,5 +6,6 @@ Håll denna tabell uppdaterad. Hjälper ny AI/användare att förstå vad som h�
 |---|---|---|---|---|
 | REQ-101 | <fil/vy> | <fil.ts> | </endpoint> | TASK-### |
 | REQ-102 | <fil/vy> | <fil.ts> | </endpoint> | TASK-### |
+| REQ-201 | `CompanySettings.vue` | `entities.ts` (CompanySettings) | `/settings/company`, `/settings/company/logo` | TASK-Company-Settings |
 
 Notera: Komplettera efter varje iteration.

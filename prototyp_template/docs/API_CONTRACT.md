@@ -84,3 +84,30 @@ Vid fel svarar API:t med HTTP-koder och valfritt JSON-innehåll:
 Frontenden mappar typade felkoder internt (se `HttpClient.getErrorCode`).
 
 > Exempel på domänspecifika kontrakt (t.ex. kundregister) finns i `EXAMPLES.md`. Använd dem som referens, inte som krav.
+
+### Företagsinställningar (`/settings/company`)
+
+- GET `/settings/company`
+  - response:
+    ```
+    {
+      id: number,
+      companyName: string,
+      address: { street: string; zip: string; city: string; country: string },
+      mainContact: { name: string; email: string; phone: string },
+      logoUrl?: string | null,
+      createdAt?: string,
+      updatedAt?: string
+    }
+    ```
+
+- PUT `/settings/company`
+  - body: `Partial<CompanySettings>` (alla fält ovan valfria)
+  - response: `CompanySettings`
+
+- POST `/settings/company/logo`
+  - headers: `Content-Type: multipart/form-data`
+  - body: `{ file: File }`
+  - response: `{ logoUrl: string }`
+
+Notera: Under prototypfas lagras detta via en composable (`useCompanySettings`) som skyddar webbläsar-API:n. Backend ska implementera ovanstående kontrakt vid integration.

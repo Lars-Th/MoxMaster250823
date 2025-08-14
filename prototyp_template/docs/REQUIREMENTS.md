@@ -37,6 +37,7 @@ Använd denna mall och fyll i successivt. Uppdatera vid varje iteration. Alla kr
 
 - Navigationsflöden och vynamn
 - Komponentbehov (shadcn/ui + shared)
+ - Formregler: alla inputs/selects använder shadcn-komponenter och klasser `form-xs`; labels använder `label-xs`. Inga råa `<input>` i sidor som baseras på `DetailPage.vue`.
 
 ### 7. Risker och antaganden
 

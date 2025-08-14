@@ -19,6 +19,10 @@ Planen uppdateras per iteration. Håll den kort och levande.
 - M2: <lista artefakter>
 - M3: <lista artefakter>
 
+### Kvalitetsgrindar
+- UI i sidor som använder `DetailPage.vue` följer `form-xs`/`label-xs` och shadcn-komponenter.
+- Ingen direkt åtkomst till `localStorage`/`window` utanför composables med guards.
+
 ### Risker och motåtgärder
 
 - R1: <risk> → <åtgärd>

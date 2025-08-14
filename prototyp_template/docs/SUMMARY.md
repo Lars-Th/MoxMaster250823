@@ -13,6 +13,7 @@ Uppdateras i slutet av varje iteration. Kort, hög signal för ny AI/användare.
 - Vyer (`@/pages/`): <lista filer eller mappar>
 - Typer (`src/types/`): <lista berörda filer>
 - Endpoints (`docs/API_CONTRACT.md`): <lista ändringar>
+ - Regler/dokumentation: Uppdaterade riktlinjer för säkra browser-API-guards och formulär med shadcn (`form-xs`/`label-xs`).
 
 #### Öppna frågor/antaganden
 - [ ] <fråga/antagande att bekräfta>
